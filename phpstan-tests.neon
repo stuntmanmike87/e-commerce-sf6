@@ -1,0 +1,6 @@
+includes:
+	- phpstan.neon.dist
+
+parameters:
+    doctrine:
+        objectManagerLoader: build/phpstan/doctrine-orm-bootstrap.php
