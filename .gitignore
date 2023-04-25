@@ -7,3 +7,37 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+###> phpunit/phpunit, symfony/phpunit-bridge ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit, symfony/phpunit-bridge ###
+
+###< PHPStan ###
+phpstan.neon
+###< PHPStan ###
+###> PHPMetrics HTML report ###
+/myreport/
+###< PHPMetrics HTML report ###
+
+.vscode
+
+###> symfony/webpack-encore-bundle ###
+# /node_modules/
+# /public/build/
+# npm-debug.log
+# yarn-error.log
+###< symfony/webpack-encore-bundle ###
+
+###< PHPDOCUMENTOR ###
+.phpdoc
+docs
+###< PHPDOCUMENTOR ###
+
+###< PHPStan ###
+phpstan.neon
+###< PHPStan ###
+
+###> PHPMetrics HTML report ###
+/myreport/
+###< PHPMetrics HTML report ###
