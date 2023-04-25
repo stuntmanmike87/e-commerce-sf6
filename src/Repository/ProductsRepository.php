@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Products;
@@ -13,24 +15,25 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Products[]    findAll()
  * @method Products[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ProductsRepository extends ServiceEntityRepository
+final class ProductsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Products::class);
     }
 
+    /** @return  array<mixed> $result */
     public function findProductsPaginated(int $page, string $slug, int $limit = 6): array
     {
         $limit = abs($limit);
-
+        /** @var array<mixed> $result */
         $result = [];
 
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('c', 'p')
-            ->from('App\Entity\Products', 'p')
+            ->from(\App\Entity\Products::class, 'p')//->from('App\Entity\Products', 'p')
             ->join('p.categories', 'c')
-            ->where("c.slug = '$slug'")
+            ->where(sprintf("c.slug = \'%s\'", $slug))//->where("c.slug = '$slug'")
             ->setMaxResults($limit)
             ->setFirstResult(($page * $limit) - $limit);
 
@@ -38,7 +41,7 @@ class ProductsRepository extends ServiceEntityRepository
         $data = $paginator->getQuery()->getResult();
         
         //On vérifie qu'on a des données
-        if(empty($data)){
+        if($data === null){//if(empty($data)){
             return $result;
         }
 

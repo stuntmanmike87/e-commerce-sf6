@@ -1,34 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security\Voter;
 
 use App\Entity\Products;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class ProductsVoter extends Voter
+final class ProductsVoter extends Voter
 {
-    const EDIT = 'PRODUCT_EDIT';
-    const DELETE = 'PRODUCT_DELETE';
+    public const EDIT = 'PRODUCT_EDIT';
 
-    private $security;
+    public const DELETE = 'PRODUCT_DELETE';
+
+    public function __construct(private readonly Security $security)
+    {
+    }
+
+    /* private Security $security;
 
     public function __construct(Security $security)
     {
         $this->security = $security;
-    }
+    } */
 
     protected function supports(string $attribute, $product): bool
     {
-        if(!in_array($attribute, [self::EDIT, self::DELETE])){
+        if(!in_array($attribute, [self::EDIT, self::DELETE], true)){
             return false;
         }
-        if(!$product instanceof Products){
+
+        return $product instanceof Products;
+        /* if(!$product instanceof Products){
             return false;
         }
-        return true;
+
+        return true; */
 
         // return in_array($attribute, [self::EDIT, self::DELETE]) && $product instanceof Products;
     }
@@ -44,7 +54,7 @@ class ProductsVoter extends Voter
         if($this->security->isGranted('ROLE_ADMIN')) return true;
 
         // On vérifie les permissions
-        switch($attribute){
+        /* switch($attribute){
             case self::EDIT:
                 // On vérifie si l'utilisateur peut éditer
                 return $this->canEdit();
@@ -53,13 +63,28 @@ class ProductsVoter extends Voter
                 // On vérifie si l'utilisateur peut supprimer
                 return $this->canDelete();
                 break;
+        } */
+
+        if ($attribute == self::EDIT){
+            // On vérifie si l'utilisateur peut éditer
+            return $this->canEdit();
         }
+
+        if ($attribute == self::DELETE){
+            // On vérifie si l'utilisateur peut supprimer
+            return $this->canDelete();
+        }
+
+        return true;
     }
 
-    private function canEdit(){
+    private function canEdit(): bool
+    {
         return $this->security->isGranted('ROLE_PRODUCT_ADMIN');
     }
-    private function canDelete(){
+
+    private function canDelete(): bool
+    {
         return $this->security->isGranted('ROLE_ADMIN');
     }
 }

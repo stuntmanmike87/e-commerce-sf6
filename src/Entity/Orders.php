@@ -1,35 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use App\Entity\Trait\CreatedAtTrait;
 use App\Repository\OrdersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrdersRepository::class)]
+/** @final */
 class Orders
 {
-    use CreatedAtTrait;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 20, unique: true)]
-    private $reference;
+    private string $reference;
 
     #[ORM\ManyToOne(targetEntity: Coupons::class, inversedBy: 'orders')]
-    private $coupons;
+    private ?Coupons $coupons = null;//private Coupons $coupons;
+
+    /* #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private Users $users; */
 
     #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'orders')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $users;
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Users $users = null;
 
+    /** @var  Collection<OrdersDetails> $ordersDetails */
     #[ORM\OneToMany(mappedBy: 'orders', targetEntity: OrdersDetails::class, orphanRemoval: true)]
-    private $ordersDetails;
+    private Collection $ordersDetails;
+
+    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private \DateTimeImmutable $created_at;
 
     public function __construct()
     {
@@ -98,12 +106,30 @@ class Orders
 
     public function removeOrdersDetail(OrdersDetails $ordersDetail): self
     {
-        if ($this->ordersDetails->removeElement($ordersDetail)) {
+        // set the owning side to null (unless already changed)
+        if ($this->ordersDetails->removeElement($ordersDetail) && $ordersDetail->getOrders() === $this) {
+                $ordersDetail == null;
+                //->setOrders(null);
+        }
+
+        /* if ($this->ordersDetails->removeElement($ordersDetail)) {
             // set the owning side to null (unless already changed)
             if ($ordersDetail->getOrders() === $this) {
-                $ordersDetail->setOrders(null);
+                $ordersDetail == null;//->setOrders(null);
             }
-        }
+        } */
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }

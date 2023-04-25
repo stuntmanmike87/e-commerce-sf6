@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use App\Entity\Trait\CreatedAtTrait;
-use App\Entity\Trait\SlugTrait;
 use App\Repository\ProductsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,15 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductsRepository::class)]
+/** @final */
 class Products
 {
-    use CreatedAtTrait;
-    use SlugTrait;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank(message: 'Le nom du produit ne peut pas être vide')]
@@ -29,27 +27,36 @@ class Products
         minMessage: 'Le titre doit faire au moins {{ limit }} caractères',
         maxMessage: 'Le titre ne doit pas faire plus de {{ limit }} caractères'
     )]
-    private $name;
+    private string $name;
 
     #[ORM\Column(type: 'text')]
-    private $description;
+    private string $description;
 
     #[ORM\Column(type: 'integer')]
-    private $price;
+    private int $price;
 
     #[ORM\Column(type: 'integer')]
     #[Assert\PositiveOrZero(message: 'Le stock ne peut pas être négatif')]
-    private $stock;
+    private int $stock;
 
     #[ORM\ManyToOne(targetEntity: Categories::class, inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $categories;
+    #[ORM\JoinColumn(nullable: true/*false*/)]
+    private ?Categories $categories = null;
 
+    /** @var  Collection<Images> $images */
     #[ORM\OneToMany(mappedBy: 'products', targetEntity: Images::class, orphanRemoval: true, cascade: ['persist'])]
-    private $images;
+    private Collection $images;
 
+    /** @var  Collection<OrdersDetails> $ordersDetails */
     #[ORM\OneToMany(mappedBy: 'products', targetEntity: OrdersDetails::class)]
-    private $ordersDetails;
+    private Collection $ordersDetails;
+
+    ///** @var  \DateTimeImmutable $created_at */
+    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private \DateTimeImmutable $created_at;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $slug;
 
     public function __construct()
     {
@@ -143,12 +150,17 @@ class Products
 
     public function removeImage(Images $image): self
     {
-        if ($this->images->removeElement($image)) {
+        // set the owning side to null (unless already changed)
+        if ($this->images->removeElement($image) && $image->getProducts() === $this) {
+                $image->setProducts(null);
+        }
+
+        /* if ($this->images->removeElement($image)) {
             // set the owning side to null (unless already changed)
             if ($image->getProducts() === $this) {
                 $image->setProducts(null);
             }
-        }
+        } */
 
         return $this;
     }
@@ -173,12 +185,42 @@ class Products
 
     public function removeOrdersDetail(OrdersDetails $ordersDetail): self
     {
-        if ($this->ordersDetails->removeElement($ordersDetail)) {
+        // set the owning side to null (unless already changed)
+        if ($this->ordersDetails->removeElement($ordersDetail) && $ordersDetail->getProducts() === $this) {
+                $ordersDetail == null;
+                //->setProducts(null);
+        }
+
+        /* if ($this->ordersDetails->removeElement($ordersDetail)) {
             // set the owning side to null (unless already changed)
             if ($ordersDetail->getProducts() === $this) {
-                $ordersDetail->setProducts(null);
+                $ordersDetail == null;//->setProducts(null);
             }
-        }
+        } */
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

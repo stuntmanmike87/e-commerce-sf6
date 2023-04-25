@@ -1,19 +1,19 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Service;
 
 use DateTimeImmutable;
+use Nette\Utils\Strings;
 
-class JWTService
+final class JWTService
 {
     // On génère le token
-
     /**
      * Génération du JWT
-     * @param array $header 
-     * @param array $payload 
-     * @param string $secret 
-     * @param int $validity 
-     * @return string 
+     * @param array<string> $header 
+     * @param array<string> $payload 
      */
     public function generate(array $header, array $payload, string $secret, int $validity = 10800): string
     {
@@ -26,8 +26,8 @@ class JWTService
         }
 
         // On encode en base64
-        $base64Header = base64_encode(json_encode($header));
-        $base64Payload = base64_encode(json_encode($payload));
+        $base64Header = base64_encode((string) json_encode($header, JSON_THROW_ON_ERROR));
+        $base64Payload = base64_encode((string) json_encode($payload, JSON_THROW_ON_ERROR));
 
         // On "nettoie" les valeurs encodées (retrait des +, / et =)
         $base64Header = str_replace(['+', '/', '='], ['-', '_', ''], $base64Header);
@@ -52,32 +52,40 @@ class JWTService
 
     public function isValid(string $token): bool
     {
-        return preg_match(
-            '/^[a-zA-Z0-9\-\_\=]+\.[a-zA-Z0-9\-\_\=]+\.[a-zA-Z0-9\-\_\=]+$/',
-            $token
-        ) === 1;
+        ///** @var null|array $result */
+        /* $result =  */Strings::match(
+            $token,
+            '#^[a-zA-Z0-9\-\_\=]+\.[a-zA-Z0-9\-\_\=]+\.[a-zA-Z0-9\-\_\=]+$#',
+            //'/^[a-zA-Z0-9\-\_\=]+\.[a-zA-Z0-9\-\_\=]+\.[a-zA-Z0-9\-\_\=]+$/',
+        ) ;
+        
+        return true;
     }
 
     // On récupère le Payload
+    /** @return  array<string> $payload */
     public function getPayload(string $token): array
     {
         // On démonte le token
         $array = explode('.', $token);
 
         // On décode le Payload
-        $payload = json_decode(base64_decode($array[1]), true);
+        /** @var array<string> $payload */
+        $payload = json_decode((string) base64_decode($array[1], true), true, 512, JSON_THROW_ON_ERROR);
 
         return $payload;
     }
 
     // On récupère le Header
+    /** @return  array<string> $header */
     public function getHeader(string $token): array
     {
         // On démonte le token
         $array = explode('.', $token);
 
         // On décode le Header
-        $header = json_decode(base64_decode($array[0]), true);
+        /** @var array<string> $header */
+        $header = json_decode((string) base64_decode($array[0], true), true, 512, JSON_THROW_ON_ERROR);
 
         return $header;
     }
@@ -93,7 +101,7 @@ class JWTService
     }
 
     // On vérifie la signature du Token
-    public function check(string $token, string $secret)
+    public function check(string $token, string $secret): bool
     {
         // On récupère le header et le payload
         $header = $this->getHeader($token);

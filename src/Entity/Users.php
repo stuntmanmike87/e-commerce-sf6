@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use App\Entity\Trait\CreatedAtTrait;
 use App\Repository\UsersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,51 +12,53 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
- */
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+/** @final */
 class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    use CreatedAtTrait;
-    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private $email;
+    private string $email;
 
+    /** @var  array<string> $roles */
     #[ORM\Column(type: 'json')]
-    private $roles = [];
+    private array $roles = [];
 
     #[ORM\Column(type: 'string')]
-    private $password;
+    private string $password;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $lastname;
+    private string $lastname;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $firstname;
+    private string $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $address;
+    private string $address;
 
     #[ORM\Column(type: 'string', length: 5)]
-    private $zipcode;
+    private string $zipcode;
 
     #[ORM\Column(type: 'string', length: 150)]
-    private $city;
+    private string $city;
 
     #[ORM\Column(type: 'boolean')]
-    private $is_verified = false;
+    private bool $is_verified = false;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private $resetToken;
+    private ?string $resetToken = null;
 
+    /** @var  Collection<Orders> $orders */
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Orders::class)]
-    private $orders;
+    private Collection $orders;
+
+    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private \DateTimeImmutable $created_at;
 
     public function __construct()
     {
@@ -87,7 +90,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return $this->email;
     }
 
     /**
@@ -102,6 +105,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    /** @param array<string> $roles */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
@@ -127,7 +131,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -237,12 +241,29 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeOrder(Orders $order): self
     {
-        if ($this->orders->removeElement($order)) {
+        // set the owning side to null (unless already changed)
+        if ($this->orders->removeElement($order) && $order->getUsers() === $this) {
+            $order->setUsers(null);
+        }
+
+        /* if ($this->orders->removeElement($order)) {
             // set the owning side to null (unless already changed)
             if ($order->getUsers() === $this) {
                 $order->setUsers(null);
             }
-        }
+        } */
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }

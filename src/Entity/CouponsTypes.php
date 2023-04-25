@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\CouponsTypesRepository;
@@ -8,18 +10,20 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CouponsTypesRepository::class)]
+/** @final */
 class CouponsTypes
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 50)]
-    private $name;
+    private string $name;
 
+    /** @var  Collection<Coupons> $coupons */
     #[ORM\OneToMany(mappedBy: 'coupons_types', targetEntity: Coupons::class, orphanRemoval: true)]
-    private $coupons;
+    private Collection $coupons;
 
     public function __construct()
     {
@@ -63,12 +67,17 @@ class CouponsTypes
 
     public function removeCoupon(Coupons $coupon): self
     {
-        if ($this->coupons->removeElement($coupon)) {
+        // set the owning side to null (unless already changed)
+        if ($this->coupons->removeElement($coupon) && $coupon->getCouponsTypes() === $this) {
+                $coupon->setCouponsTypes(null);
+        }
+
+        /* if ($this->coupons->removeElement($coupon)) {
             // set the owning side to null (unless already changed)
             if ($coupon->getCouponsTypes() === $this) {
                 $coupon->setCouponsTypes(null);
             }
-        }
+        } */
 
         return $this;
     }

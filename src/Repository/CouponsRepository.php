@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Coupons;
@@ -12,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Coupons[]    findAll()
  * @method Coupons[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CouponsRepository extends ServiceEntityRepository
+final class CouponsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

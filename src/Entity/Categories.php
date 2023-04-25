@@ -1,38 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use App\Entity\Trait\SlugTrait;
 use App\Repository\CategoriesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoriesRepository::class)]
+/** @final */
 class Categories
 {
-    use SlugTrait;
-    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $name;
+    private string $name;
 
     #[ORM\Column(type: 'integer')]
-    private $categoryOrder;
+    private int $categoryOrder;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'categories')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    private $parent;
+    private ?Categories $parent = null;//private Categories $parent;
 
+    /** @var  Collection<Categories> $categories */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
-    private $categories;
+    private Collection $categories;
 
+    /** @var  Collection<Products> $products */
     #[ORM\OneToMany(mappedBy: 'categories', targetEntity: Products::class)]
-    private $products;
+    private Collection $products;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $slug;
 
     public function __construct()
     {
@@ -101,12 +106,17 @@ class Categories
 
     public function removeCategory(self $category): self
     {
-        if ($this->categories->removeElement($category)) {
+        // set the owning side to null (unless already changed)
+        if ($this->categories->removeElement($category) && $category->getParent() === $this) {
+                $category->setParent(null);
+        }
+
+        /* if ($this->categories->removeElement($category)) {
             // set the owning side to null (unless already changed)
             if ($category->getParent() === $this) {
                 $category->setParent(null);
             }
-        }
+        } */
 
         return $this;
     }
@@ -131,12 +141,29 @@ class Categories
 
     public function removeProduct(Products $product): self
     {
-        if ($this->products->removeElement($product)) {
+        // set the owning side to null (unless already changed)
+        if ($this->products->removeElement($product) && $product->getCategories() === $this) {
+                $product->setCategories(null);
+        }
+
+        /* if ($this->products->removeElement($product)) {
             // set the owning side to null (unless already changed)
             if ($product->getCategories() === $this) {
                 $product->setCategories(null);
             }
-        }
+        } */
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

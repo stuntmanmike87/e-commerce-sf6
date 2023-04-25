@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Categories;
@@ -15,7 +17,7 @@ use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Positive;
 
-class ProductsFormType extends AbstractType
+final class ProductsFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -41,11 +43,14 @@ class ProductsFormType extends AbstractType
                 'choice_label' => 'name',
                 'label' => 'Catégorie',
                 'group_by' => 'parent.name',
-                'query_builder' => function(CategoriesRepository $cr){
+                'query_builder' => static fn(CategoriesRepository $cr) => $cr->createQueryBuilder('c')
+                    ->where('c.parent IS NOT NULL')
+                    ->orderBy('c.name', 'ASC')
+                /* 'query_builder' => function(CategoriesRepository $cr){
                     return $cr->createQueryBuilder('c')
                         ->where('c.parent IS NOT NULL')
                         ->orderBy('c.name', 'ASC');
-                }
+                } */
             ])
             ->add('images', FileType::class, [
                 'label' => false,
@@ -56,7 +61,7 @@ class ProductsFormType extends AbstractType
                     new All(
                         new Image([
                             'maxWidth' => 1280,
-                            'maxWidthMessage' => 'L\'image doit faire {{ max_width }} pixels de large au maximum'
+                            'maxWidthMessage' => "L'image doit faire {{ max_width }} pixels de large au maximum"
                         ])
                     )
                 ]

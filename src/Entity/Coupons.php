@@ -1,47 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use App\Entity\Trait\CreatedAtTrait;
 use App\Repository\CouponsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CouponsRepository::class)]
+/** @final */
 class Coupons
 {
-    use CreatedAtTrait;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 10, unique: true)]
-    private $code;
+    private string $code;
 
     #[ORM\Column(type: 'text')]
-    private $description;
+    private string $description;
 
     #[ORM\Column(type: 'integer')]
-    private $discount;
+    private int $discount;
 
     #[ORM\Column(type: 'integer')]
-    private $max_usage;
+    private int $max_usage;
 
     #[ORM\Column(type: 'datetime')]
-    private $validity;
+    private \DateTimeInterface $validity;
 
     #[ORM\Column(type: 'boolean')]
-    private $is_valid;
+    private bool $is_valid;
 
     #[ORM\ManyToOne(targetEntity: CouponsTypes::class, inversedBy: 'coupons')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $coupons_types;
+    #[ORM\JoinColumn(nullable: true/*false*/)]
+    private ?CouponsTypes $coupons_types = null;
 
+    /** @var  Collection<Orders> $orders */
     #[ORM\OneToMany(mappedBy: 'coupons', targetEntity: Orders::class)]
-    private $orders;
+    private Collection $orders;
+
+    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private \DateTimeImmutable $created_at;
 
     public function __construct()
     {
@@ -158,12 +162,29 @@ class Coupons
 
     public function removeOrder(Orders $order): self
     {
-        if ($this->orders->removeElement($order)) {
+        // set the owning side to null (unless already changed)
+        if ($this->orders->removeElement($order) && $order->getCoupons() === $this) {
+                $order->setCoupons(null);
+        }
+
+        /* if ($this->orders->removeElement($order)) {
             // set the owning side to null (unless already changed)
             if ($order->getCoupons() === $this) {
                 $order->setCoupons(null);
             }
-        }
+        } */
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }

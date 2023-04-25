@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Entity\Images;
@@ -7,6 +9,7 @@ use App\Entity\Products;
 use App\Form\ProductsFormType;
 use App\Repository\ProductsRepository;
 use App\Service\PictureService;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,15 +17,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[Route('/admin/produits', name: 'admin_products_')]
-class ProductsController extends AbstractController
+final class ProductsController extends AbstractController
 {
     #[Route('/', name: 'index')]
     public function index(ProductsRepository $productsRepository): Response
     {
         $produits = $productsRepository->findAll();
-        return $this->render('admin/products/index.html.twig', compact('produits'));
+        return $this->render('admin/products/index.html.twig', ['produits' => $produits]);
+        //return $this->render('admin/products/index.html.twig', compact('produits'));
     }
 
     #[Route('/ajout', name: 'add')]
@@ -42,8 +47,10 @@ class ProductsController extends AbstractController
         //On vérifie si le formulaire est soumis ET valide
         if($productForm->isSubmitted() && $productForm->isValid()){
             // On récupère les images
+            /** @var  Collection<Images> $images */
             $images = $productForm->get('images')->getData();
             
+            /** @var UploadedFile $image */
             foreach($images as $image){
                 // On définit le dossier de destination
                 $folder = 'products';
@@ -57,8 +64,9 @@ class ProductsController extends AbstractController
             }
 
             // On génère le slug
-            $slug = $slugger->slug($product->getName());
-            $product->setSlug($slug);
+            $prod = $product->getName();
+            $slug = $slugger->slug((string)$prod);
+            $product->setSlug((string)$slug);
 
             // On arrondit le prix 
             // $prix = $product->getPrice() * 100;
@@ -79,7 +87,8 @@ class ProductsController extends AbstractController
         //     'productForm' => $productForm->createView()
         // ]);
 
-        return $this->renderForm('admin/products/add.html.twig', compact('productForm'));
+        return $this->render('admin/products/add.html.twig', ['productForm' => $productForm]);
+        //return $this->render('admin/products/add.html.twig', compact('productForm'));
         // ['productForm' => $productForm]
     }
 
@@ -102,8 +111,10 @@ class ProductsController extends AbstractController
         //On vérifie si le formulaire est soumis ET valide
         if($productForm->isSubmitted() && $productForm->isValid()){
             // On récupère les images
+            /** @var  Collection<Images> $images */
             $images = $productForm->get('images')->getData();
 
+            /** @var UploadedFile $image */
             foreach($images as $image){
                 // On définit le dossier de destination
                 $folder = 'products';
@@ -118,8 +129,9 @@ class ProductsController extends AbstractController
             
             
             // On génère le slug
-            $slug = $slugger->slug($product->getName());
-            $product->setSlug($slug);
+            $prod = $product->getName();
+            $slug = $slugger->slug((string)$prod);
+            $product->setSlug((string)$slug);
 
             // On arrondit le prix 
             // $prix = $product->getPrice() * 100;
@@ -137,7 +149,7 @@ class ProductsController extends AbstractController
 
 
         return $this->render('admin/products/edit.html.twig',[
-            'productForm' => $productForm->createView(),
+            'productForm' => $productForm,//->createView(),
             'product' => $product
         ]);
 
@@ -158,25 +170,31 @@ class ProductsController extends AbstractController
     public function deleteImage(Images $image, Request $request, EntityManagerInterface $em, PictureService $pictureService): JsonResponse
     {
         // On récupère le contenu de la requête
-        $data = json_decode($request->getContent(), true);
+        /** @var array<string> $data */
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        //$data = json_decode($request->getContent(), true);
 
         if($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])){
             // Le token csrf est valide
             // On récupère le nom de l'image
             $nom = $image->getName();
 
-            if($pictureService->delete($nom, 'products', 300, 300)){
+            if($pictureService->delete((string)$nom, 'products', 300, 300)){
                 // On supprime l'image de la base de données
                 $em->remove($image);
                 $em->flush();
 
-                return new JsonResponse(['success' => true], 200);
+                return new JsonResponse(['success' => true], \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+                //return new JsonResponse(['success' => true], 200);
             }
+    
             // La suppression a échoué
-            return new JsonResponse(['error' => 'Erreur de suppression'], 400);
+            return new JsonResponse(['error' => 'Erreur de suppression'], \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
+            //return new JsonResponse(['error' => 'Erreur de suppression'], 400);
         }
 
-        return new JsonResponse(['error' => 'Token invalide'], 400);
+        return new JsonResponse(['error' => 'Token invalide'], \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
+        //return new JsonResponse(['error' => 'Token invalide'], 400);
     }
 
 }

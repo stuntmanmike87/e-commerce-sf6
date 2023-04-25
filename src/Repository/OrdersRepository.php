@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Orders;
@@ -12,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Orders[]    findAll()
  * @method Orders[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class OrdersRepository extends ServiceEntityRepository
+final class OrdersRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

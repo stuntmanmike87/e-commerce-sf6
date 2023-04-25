@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Products;
@@ -8,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/produits', name: 'products_')]
-class ProductsController extends AbstractController
+final class ProductsController extends AbstractController
 {
     #[Route('/', name: 'index')]
     public function index(): Response
@@ -19,6 +21,7 @@ class ProductsController extends AbstractController
     #[Route('/{slug}', name: 'details')]
     public function details(Products $product): Response
     {
-        return $this->render('products/details.html.twig', compact('product'));
+        return $this->render('products/details.html.twig', ['product' => $product]);
+        //return $this->render('products/details.html.twig', compact('product'));
     }
 }

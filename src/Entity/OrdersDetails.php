@@ -1,28 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\OrdersDetailsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrdersDetailsRepository::class)]
+/** @final */
 class OrdersDetails
 {
     #[ORM\Column(type: 'integer')]
-    private $quantity;
+    private int $quantity;
 
     #[ORM\Column(type: 'integer')]
-    private $price;
+    private int $price;
 
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Orders::class, inversedBy: 'ordersDetails')]
     #[ORM\JoinColumn(nullable: false)]
-    private $orders;
+    private Orders $orders;
 
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Products::class, inversedBy: 'ordersDetails')]
     #[ORM\JoinColumn(nullable: false)]
-    private $products;
+    private Products $products;
 
     public function getQuantity(): ?int
     {
@@ -53,7 +56,7 @@ class OrdersDetails
         return $this->orders;
     }
 
-    public function setOrders(?Orders $orders): self
+    public function setOrders(Orders $orders): self
     {
         $this->orders = $orders;
 
@@ -65,7 +68,7 @@ class OrdersDetails
         return $this->products;
     }
 
-    public function setProducts(?Products $products): self
+    public function setProducts(Products $products): self
     {
         $this->products = $products;
 
