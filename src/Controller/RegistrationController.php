@@ -71,7 +71,7 @@ final class RegistrationController extends AbstractController
             $token = $jwt->generate($header, $payload, $secret );
 
             /** @var array<string> $context() */
-            $context = ['user' => $user, 'token' => $token];//$context = compact('user', 'token');
+            $context = ['user' => $user, 'token' => $token];
         
             // On envoie un mail
             $mail->send(
@@ -159,7 +159,7 @@ final class RegistrationController extends AbstractController
         $token = $jwt->generate($header, $payload, $secret);
 
         /** @var array<string> $context */
-        $context = ['user' => $user, 'token' => $token];//$context = compact('user', 'token');
+        $context = ['user' => $user, 'token' => $token];
         
         // On envoie un mail
         $mail->send(

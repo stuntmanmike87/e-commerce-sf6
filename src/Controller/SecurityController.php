@@ -81,7 +81,7 @@ final class SecurityController extends AbstractController
                 
                 // On crée les données du mail
                 /** @var array<string> $context */
-                $context = ['url' => $url, 'user' => $user];//$context = compact('url', 'user');
+                $context = ['url' => $url, 'user' => $user];
 
                 // Envoi du mail
                 $mail->send(

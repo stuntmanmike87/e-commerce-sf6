@@ -18,6 +18,5 @@ final class CategoriesController extends AbstractController
         $categories = $categoriesRepository->findBy([], ['categoryOrder' => 'asc']);
 
         return $this->render('admin/categories/index.html.twig', ['categories' => $categories]);
-        //return $this->render('admin/categories/index.html.twig', compact('categories'));
     }
 }

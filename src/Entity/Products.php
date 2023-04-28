@@ -43,15 +43,14 @@ class Products
     #[ORM\JoinColumn(nullable: true/*false*/)]
     private ?Categories $categories = null;
 
-    /** @var  Collection<Images> $images */
+    /** @var Collection<Images> $images */
     #[ORM\OneToMany(mappedBy: 'products', targetEntity: Images::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $images;
 
-    /** @var  Collection<OrdersDetails> $ordersDetails */
+    /** @var Collection<OrdersDetails> $ordersDetails */
     #[ORM\OneToMany(mappedBy: 'products', targetEntity: OrdersDetails::class)]
     private Collection $ordersDetails;
 
-    ///** @var  \DateTimeImmutable $created_at */
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private \DateTimeImmutable $created_at;
 

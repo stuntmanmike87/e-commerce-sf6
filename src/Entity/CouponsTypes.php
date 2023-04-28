@@ -21,7 +21,7 @@ class CouponsTypes
     #[ORM\Column(type: 'string', length: 50)]
     private string $name;
 
-    /** @var  Collection<Coupons> $coupons */
+    /** @var Collection<Coupons> $coupons */
     #[ORM\OneToMany(mappedBy: 'coupons_types', targetEntity: Coupons::class, orphanRemoval: true)]
     private Collection $coupons;
 

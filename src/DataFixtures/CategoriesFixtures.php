@@ -15,8 +15,6 @@ final class CategoriesFixtures extends Fixture
 
     public function __construct(private readonly SluggerInterface $slugger){}
 
-    //public function __construct(private SluggerInterface $slugger){}
-
     public function load(ObjectManager $manager): void
     {
         $parent = $this->createCategory('Informatique', $manager, null);

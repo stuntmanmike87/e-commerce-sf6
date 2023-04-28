@@ -15,8 +15,8 @@ final class UsersFixtures extends Fixture
 {
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordEncoder//,
-        //private UserPasswordHasherInterface $passwordEncoder//,
-        //private SluggerInterface $slugger
+        //private readonly UserPasswordHasherInterface $passwordEncoder//,
+        //private readonly SluggerInterface $slugger
     ){}
 
     public function load(ObjectManager $manager): void

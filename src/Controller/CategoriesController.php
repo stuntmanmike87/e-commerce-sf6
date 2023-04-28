@@ -25,6 +25,5 @@ final class CategoriesController extends AbstractController
         $products = $productsRepository->findProductsPaginated($page, (string)$categ, 4);
 
         return $this->render('categories/list.html.twig', ['category' => $category, 'products' => $products]);
-        //return $this->render('categories/list.html.twig', compact('category', 'products'));
     }
 }

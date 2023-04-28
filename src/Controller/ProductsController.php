@@ -22,6 +22,5 @@ final class ProductsController extends AbstractController
     public function details(Products $product): Response
     {
         return $this->render('products/details.html.twig', ['product' => $product]);
-        //return $this->render('products/details.html.twig', compact('product'));
     }
 }

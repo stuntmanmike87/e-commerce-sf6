@@ -27,7 +27,6 @@ final class ProductsController extends AbstractController
     {
         $produits = $productsRepository->findAll();
         return $this->render('admin/products/index.html.twig', ['produits' => $produits]);
-        //return $this->render('admin/products/index.html.twig', compact('produits'));
     }
 
     #[Route('/ajout', name: 'add')]
@@ -88,8 +87,6 @@ final class ProductsController extends AbstractController
         // ]);
 
         return $this->render('admin/products/add.html.twig', ['productForm' => $productForm]);
-        //return $this->render('admin/products/add.html.twig', compact('productForm'));
-        // ['productForm' => $productForm]
     }
 
     #[Route('/edition/{id}', name: 'edit')]
@@ -152,9 +149,6 @@ final class ProductsController extends AbstractController
             'productForm' => $productForm,//->createView(),
             'product' => $product
         ]);
-
-        // return $this->renderForm('admin/products/edit.html.twig', compact('productForm'));
-        // ['productForm' => $productForm]
     }
 
     #[Route('/suppression/{id}', name: 'delete')]
@@ -172,7 +166,6 @@ final class ProductsController extends AbstractController
         // On récupère le contenu de la requête
         /** @var array<string> $data */
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        //$data = json_decode($request->getContent(), true);
 
         if($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])){
             // Le token csrf est valide
@@ -185,16 +178,13 @@ final class ProductsController extends AbstractController
                 $em->flush();
 
                 return new JsonResponse(['success' => true], \Symfony\Component\HttpFoundation\Response::HTTP_OK);
-                //return new JsonResponse(['success' => true], 200);
             }
     
             // La suppression a échoué
             return new JsonResponse(['error' => 'Erreur de suppression'], \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
-            //return new JsonResponse(['error' => 'Erreur de suppression'], 400);
         }
 
         return new JsonResponse(['error' => 'Token invalide'], \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
-        //return new JsonResponse(['error' => 'Token invalide'], 400);
     }
 
 }

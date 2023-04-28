@@ -13,13 +13,6 @@ final class SendMailService
     {
     }
 
-    /* private MailerInterface $mailer;
-
-    public function __construct(MailerInterface $mailer)
-    {
-        $this->mailer = $mailer;
-    } */
-
     /** @param  array<string> $context */
     public function send(
         string $from,
@@ -34,8 +27,7 @@ final class SendMailService
             ->from($from)
             ->to($to)
             ->subject($subject)
-            ->htmlTemplate(sprintf('emails/%s.html.twig', $template))
-            //->htmlTemplate("emails/$template.html.twig")
+            ->htmlTemplate(sprintf('emails/%s.html.twig', $template))//->htmlTemplate("emails/$template.html.twig")
             ->context($context);
 
         // On envoie le mail

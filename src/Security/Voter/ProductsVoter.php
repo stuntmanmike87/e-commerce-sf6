@@ -20,13 +20,6 @@ final class ProductsVoter extends Voter
     {
     }
 
-    /* private Security $security;
-
-    public function __construct(Security $security)
-    {
-        $this->security = $security;
-    } */
-
     protected function supports(string $attribute, $product): bool
     {
         if(!in_array($attribute, [self::EDIT, self::DELETE], true)){
@@ -65,7 +58,7 @@ final class ProductsVoter extends Voter
                 break;
         } */
 
-        if ($attribute == self::EDIT){
+        /* if ($attribute == self::EDIT){
             // On vérifie si l'utilisateur peut éditer
             return $this->canEdit();
         }
@@ -73,7 +66,17 @@ final class ProductsVoter extends Voter
         if ($attribute == self::DELETE){
             // On vérifie si l'utilisateur peut supprimer
             return $this->canDelete();
-        }
+        } */
+
+        /** @var bool $action */
+        /** @var string $attribute */
+        $action = match($attribute){
+            // On vérifie si l'utilisateur peut éditer
+            self::EDIT => $this->canEdit(),
+            // On vérifie si l'utilisateur peut supprimer
+            self::DELETE => $this->canDelete(),
+            default => throw new \Exception('error...'),
+        };
 
         return true;
     }

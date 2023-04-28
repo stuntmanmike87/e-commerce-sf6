@@ -32,7 +32,7 @@ class Orders
     #[ORM\JoinColumn(nullable: true)]
     private ?Users $users = null;
 
-    /** @var  Collection<OrdersDetails> $ordersDetails */
+    /** @var Collection<OrdersDetails> $ordersDetails */
     #[ORM\OneToMany(mappedBy: 'orders', targetEntity: OrdersDetails::class, orphanRemoval: true)]
     private Collection $ordersDetails;
 

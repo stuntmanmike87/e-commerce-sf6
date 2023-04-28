@@ -14,18 +14,10 @@ final class PictureService
     {
     }
 
-    /* private ParameterBagInterface $params;
-
-    public function __construct(ParameterBagInterface $params)
-    {
-        $this->params = $params;
-    } */
-
     public function add(UploadedFile $picture, ?string $folder = '', ?int $width = 250, ?int $height = 250): string
     {
         // On donne un nouveau nom à l'image
-        $fichier = md5(uniqid((string)random_int(0, mt_getrandmax()), true)) . '.webp';
-        //$fichier = md5(uniqid((string)rand(), true)) . '.webp';
+        $fichier = md5(uniqid((string)random_int(0, mt_getrandmax()), true)) . '.webp';//md5(uniqid((string)rand(), true)) . '.webp';
 
         // On récupère les infos de l'image
         $picture_infos = getimagesize((string)$picture);

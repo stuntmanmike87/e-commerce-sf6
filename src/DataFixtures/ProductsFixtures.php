@@ -15,8 +15,6 @@ final class ProductsFixtures extends Fixture
 {
     public function __construct(private readonly SluggerInterface $slugger){}
 
-    //public function __construct(private SluggerInterface $slugger){}
-
     public function load(ObjectManager $manager): void
     {
         // use the factory to create a Faker\Generator instance
@@ -32,8 +30,7 @@ final class ProductsFixtures extends Fixture
 
             //On va chercher une référence de catégorie
             /** @var Categories|null $category */
-            $category = $this->getReference('cat-'. random_int(1, 8));
-            //$category = $this->getReference('cat-'. rand(1, 8));
+            $category = $this->getReference('cat-'. random_int(1, 8));//('cat-'. rand(1, 8));
             $product->setCategories($category);
 
             $this->setReference('prod-'.$prod, $product);
