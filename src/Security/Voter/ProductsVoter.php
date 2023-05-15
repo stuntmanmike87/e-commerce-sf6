@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Security\Voter;
 
+use Exception;
 use App\Entity\Products;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 final class ProductsVoter extends Voter
 {
@@ -75,7 +76,7 @@ final class ProductsVoter extends Voter
             self::EDIT => $this->canEdit(),
             // On vérifie si l'utilisateur peut supprimer
             self::DELETE => $this->canDelete(),
-            default => throw new \Exception('error...'),
+            default => throw new Exception('error...'),
         };
 
         return true;
