@@ -27,7 +27,7 @@ final class SendMailService
             ->from($from)
             ->to($to)
             ->subject($subject)
-            ->htmlTemplate(sprintf('emails/%s.html.twig', $template))//->htmlTemplate("emails/$template.html.twig")
+            ->htmlTemplate(sprintf('emails/%s.html.twig', $template))
             ->context($context);
 
         // On envoie le mail

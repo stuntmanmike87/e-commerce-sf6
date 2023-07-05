@@ -76,7 +76,7 @@ final class ProductsVoter extends Voter
             self::EDIT => $this->canEdit(),
             // On vérifie si l'utilisateur peut supprimer
             self::DELETE => $this->canDelete(),
-            default => throw new Exception('error...'),
+            default => throw new Exception("Error: unknown action, the user has no such ability"),
         };
 
         return true;

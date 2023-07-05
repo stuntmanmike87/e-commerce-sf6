@@ -86,7 +86,6 @@ final class PictureService
     /** @param array<string> $picture_infos */
     public function imagecreatefromfiletype(UploadedFile $picture, array $picture_infos): mixed
     {
-        ///** @var array<string> $picture_infos */
         if ($picture_infos['mime'] == 'image/png'){
             $picture_source = imagecreatefrompng((string)$picture);
         } elseif ($picture_infos['mime'] == 'image/jpeg'){

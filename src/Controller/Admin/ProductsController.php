@@ -81,7 +81,6 @@ final class ProductsController extends AbstractController
             return $this->redirectToRoute('admin_products_index');
         }
 
-
         // return $this->render('admin/products/add.html.twig',[
         //     'productForm' => $productForm->createView()
         // ]);
@@ -123,8 +122,7 @@ final class ProductsController extends AbstractController
                 $img->setName($fichier);
                 $product->addImage($img);
             }
-            
-            
+
             // On génère le slug
             $prod = $product->getName();
             $slug = $slugger->slug((string)$prod);
@@ -143,7 +141,6 @@ final class ProductsController extends AbstractController
             // On redirige
             return $this->redirectToRoute('admin_products_index');
         }
-
 
         return $this->render('admin/products/edit.html.twig',[
             'productForm' => $productForm,//->createView(),
