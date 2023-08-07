@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\OrdersDetailsRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrdersDetailsRepository::class)]
 /** @final */
 class OrdersDetails
 {
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $quantity;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $price;
 
     #[ORM\Id]

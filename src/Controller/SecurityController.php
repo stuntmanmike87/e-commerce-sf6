@@ -10,6 +10,7 @@ use App\Form\ResetPasswordRequestFormType;
 use App\Repository\UsersRepository;
 use App\Service\SendMailService;
 use Doctrine\ORM\EntityManagerInterface;
+use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,7 +44,9 @@ final class SecurityController extends AbstractController
     #[Route('/deconnexion', name:'app_logout')]
     public function logout(): never
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new LogicException(
+            'This method can be blank - it will be intercepted by the logout key on your firewall.'
+        );
     }
 
     #[Route('/oubli-pass', name:'forgotten_password')]
@@ -69,7 +72,7 @@ final class SecurityController extends AbstractController
             $user = $usersRepository->findOneByEmail($form_data);
 
             // On vérifie si on a un utilisateur
-            if($user !== null){
+            if($user instanceof Users){
                 // On génère un token de réinitialisation
                 $token = $tokenGenerator->generateToken();
                 $user->setResetToken($token);
@@ -120,7 +123,7 @@ final class SecurityController extends AbstractController
         // On vérifie si on a ce token dans la base
         $user = $usersRepository->findOneByResetToken($token);
         
-        if($user !== null){
+        if($user instanceof Users){
             $form = $this->createForm(ResetPasswordFormType::class);
 
             $form->handleRequest($request);

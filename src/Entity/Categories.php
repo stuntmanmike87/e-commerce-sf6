@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\CategoriesRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,13 +16,13 @@ class Categories
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(type: Types::STRING, length: 100)]
     private string $name;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $categoryOrder;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'categories')]
@@ -36,7 +37,7 @@ class Categories
     #[ORM\OneToMany(mappedBy: 'categories', targetEntity: Products::class)]
     private Collection $products;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $slug;
 
     public function __construct()

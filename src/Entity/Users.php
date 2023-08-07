@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UsersRepository;
+use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,51 +21,51 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     private string $email;
 
     /** @var  array<string> $roles */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private string $password;
 
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(type: Types::STRING, length: 100)]
     private string $lastname;
 
-    #[ORM\Column(type: 'string', length: 100)]
+    #[ORM\Column(type: Types::STRING, length: 100)]
     private string $firstname;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $address;
 
-    #[ORM\Column(type: 'string', length: 5)]
+    #[ORM\Column(type: Types::STRING, length: 5)]
     private string $zipcode;
 
-    #[ORM\Column(type: 'string', length: 150)]
+    #[ORM\Column(type: Types::STRING, length: 150)]
     private string $city;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $is_verified = false;
 
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 100, nullable: true)]
     private ?string $resetToken = null;
 
     /** @var  Collection<Orders> $orders */
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Orders::class)]
     private Collection $orders;
 
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTimeImmutable $created_at;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $created_at;
 
     public function __construct()
     {
         $this->orders = new ArrayCollection();
-        $this->created_at = new \DateTimeImmutable();
+        $this->created_at = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -256,12 +258,12 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
 

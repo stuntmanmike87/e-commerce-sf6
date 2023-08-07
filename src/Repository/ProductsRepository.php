@@ -31,7 +31,7 @@ final class ProductsRepository extends ServiceEntityRepository
 
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('c', 'p')
-            ->from(\App\Entity\Products::class, 'p')//->from('App\Entity\Products', 'p')
+            ->from(Products::class, 'p')//->from('App\Entity\Products', 'p')
             ->join('p.categories', 'c')
             ->where(sprintf("c.slug = \'%s\'", $slug))//->where("c.slug = '$slug'")
             ->setMaxResults($limit)
@@ -39,7 +39,7 @@ final class ProductsRepository extends ServiceEntityRepository
 
         $paginator = new Paginator($query);
         $data = $paginator->getQuery()->getResult();
-        
+
         //On vérifie qu'on a des données
         if($data === null){//if(empty($data)){
             return $result;

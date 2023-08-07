@@ -9,13 +9,13 @@ use App\Entity\Products;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Faker;
+use Faker\Factory;
 
 final class ImagesFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = Faker\Factory::create('fr_FR');
+        $faker = Factory::create('fr_FR');
 
         for($img = 1; $img <= 100; ++$img){//for($img = 1; $img <= 100; $img++){
             $image = new Images();

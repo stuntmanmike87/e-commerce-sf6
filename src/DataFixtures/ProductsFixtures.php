@@ -8,8 +8,8 @@ use App\Entity\Categories;
 use App\Entity\Products;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Faker;
 
 final class ProductsFixtures extends Fixture
 {
@@ -18,7 +18,7 @@ final class ProductsFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         // use the factory to create a Faker\Generator instance
-        $faker = Faker\Factory::create('fr_FR');
+        $faker = Factory::create('fr_FR');
 
         for($prod = 1; $prod <= 10; ++$prod){//for($prod = 1; $prod <= 10; $prod++){
             $product = new Products();

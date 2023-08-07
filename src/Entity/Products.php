@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ProductsRepository;
+use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,10 +18,10 @@ class Products
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     #[Assert\NotBlank(message: 'Le nom du produit ne peut pas être vide')]
     #[Assert\Length(
         min: 8,
@@ -29,13 +31,13 @@ class Products
     )]
     private string $name;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private string $description;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $price;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     #[Assert\PositiveOrZero(message: 'Le stock ne peut pas être négatif')]
     private int $stock;
 
@@ -51,17 +53,17 @@ class Products
     #[ORM\OneToMany(mappedBy: 'products', targetEntity: OrdersDetails::class)]
     private Collection $ordersDetails;
 
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTimeImmutable $created_at;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $created_at;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $slug;
 
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->ordersDetails = new ArrayCollection();
-        $this->created_at = new \DateTimeImmutable();
+        $this->created_at = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -200,12 +202,12 @@ class Products
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
 

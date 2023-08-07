@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\CouponsRepository;
+use DateTimeInterface;
+use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,25 +18,25 @@ class Coupons
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 10, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 10, unique: true)]
     private string $code;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: Types::TEXT)]
     private string $description;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $discount;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private int $max_usage;
 
-    #[ORM\Column(type: 'datetime')]
-    private \DateTimeInterface $validity;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private DateTimeInterface $validity;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $is_valid;
 
     #[ORM\ManyToOne(targetEntity: CouponsTypes::class, inversedBy: 'coupons')]
@@ -44,13 +47,13 @@ class Coupons
     #[ORM\OneToMany(mappedBy: 'coupons', targetEntity: Orders::class)]
     private Collection $orders;
 
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTimeImmutable $created_at;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $created_at;
 
     public function __construct()
     {
         $this->orders = new ArrayCollection();
-        $this->created_at = new \DateTimeImmutable();
+        $this->created_at = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -106,12 +109,12 @@ class Coupons
         return $this;
     }
 
-    public function getValidity(): ?\DateTimeInterface
+    public function getValidity(): ?DateTimeInterface
     {
         return $this->validity;
     }
 
-    public function setValidity(\DateTimeInterface $validity): self
+    public function setValidity(DateTimeInterface $validity): self
     {
         $this->validity = $validity;
 
@@ -177,12 +180,12 @@ class Coupons
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
 

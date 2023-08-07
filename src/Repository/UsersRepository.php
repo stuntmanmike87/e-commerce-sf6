@@ -54,7 +54,7 @@ final class UsersRepository extends ServiceEntityRepository implements PasswordU
             ->getQuery()
             ->getOneOrNullResult()
         ;
-        
+
         return $userFoundByEmail;
     }
 
@@ -66,6 +66,7 @@ final class UsersRepository extends ServiceEntityRepository implements PasswordU
             ->getQuery()
             ->getOneOrNullResult()
         ; */
+
         /** @var Users|null $userFoundByResetToken */
         $userFoundByResetToken = $this->createQueryBuilder('u')
             ->andWhere('u.token = :token')
@@ -76,8 +77,7 @@ final class UsersRepository extends ServiceEntityRepository implements PasswordU
 
         return $userFoundByResetToken;
     }
-    
-    
+
     // /**
     //  * @return Users[] Returns an array of Users objects
     //  */

@@ -174,14 +174,14 @@ final class ProductsController extends AbstractController
                 $em->remove($image);
                 $em->flush();
 
-                return new JsonResponse(['success' => true], \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+                return new JsonResponse(['success' => true], Response::HTTP_OK);
             }
     
             // La suppression a échoué
-            return new JsonResponse(['error' => 'Erreur de suppression'], \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'Erreur de suppression'], Response::HTTP_BAD_REQUEST);
         }
 
-        return new JsonResponse(['error' => 'Token invalide'], \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
+        return new JsonResponse(['error' => 'Token invalide'], Response::HTTP_BAD_REQUEST);
     }
 
 }

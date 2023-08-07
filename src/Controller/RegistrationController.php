@@ -11,12 +11,13 @@ use App\Form\RegistrationFormType;
 use App\Repository\UsersRepository;
 use App\Security\UsersAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 //use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 final class RegistrationController extends AbstractController
@@ -109,7 +110,7 @@ final class RegistrationController extends AbstractController
             $user = $usersRepository->find($payload['user_id']);
 
             //On vérifie que l'utilisateur existe et n'a pas encore activé son compte
-            if(($user instanceof Users) && !$user->getIsVerified()){
+            if(($user instanceof Users) && ! (bool) $user->getIsVerified()){
                 $user->setIsVerified(true);
                 $em->flush();
                 $this->addFlash('success', 'Utilisateur activé');
@@ -127,7 +128,7 @@ final class RegistrationController extends AbstractController
     {
         $user = $this->getUser();
 
-        if(!$user instanceof \Symfony\Component\Security\Core\User\UserInterface){//if($user === null){
+        if(!$user instanceof UserInterface){//if($user === null){
             $this->addFlash('danger', 'Vous devez être connecté pour accéder à cette page');
             return $this->redirectToRoute('app_login');    
         }
