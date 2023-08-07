@@ -35,7 +35,7 @@ docs
 ###< PHPDOCUMENTOR ###
 
 ###< PHPStan ###
-phpstan.neon
+# phpstan.neon
 ###< PHPStan ###
 
 ###> PHPMetrics HTML report ###
