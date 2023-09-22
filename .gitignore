@@ -30,7 +30,3 @@
 .phpdoc
 docs
 ###< PHPDOCUMENTOR ###
-
-###> PHPMetrics HTML report ###
-/myreport/
-###< PHPMetrics HTML report ###
