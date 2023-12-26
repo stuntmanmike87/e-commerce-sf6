@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use Override;
 use App\Entity\Images;
 use App\Entity\Products;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -13,6 +14,7 @@ use Faker\Factory;
 
 final class ImagesFixtures extends Fixture implements DependentFixtureInterface
 {
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');

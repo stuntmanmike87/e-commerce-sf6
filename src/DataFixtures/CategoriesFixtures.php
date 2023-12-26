@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use Override;
 use App\Entity\Categories;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -15,6 +16,7 @@ final class CategoriesFixtures extends Fixture
 
     public function __construct(private readonly SluggerInterface $slugger){}
 
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $parent = $this->createCategory('Informatique', $manager, null);

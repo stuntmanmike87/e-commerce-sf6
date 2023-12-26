@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use Override;
 use App\Entity\Categories;
 use App\Entity\Products;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -15,6 +16,7 @@ final class ProductsFixtures extends Fixture
 {
     public function __construct(private readonly SluggerInterface $slugger){}
 
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         // use the factory to create a Faker\Generator instance

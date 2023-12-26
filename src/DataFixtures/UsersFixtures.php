@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
+use Override;
 use App\Entity\Users;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -20,6 +21,7 @@ final class UsersFixtures extends Fixture
     {
     }
 
+    #[Override]
     public function load(ObjectManager $manager): void
     {
         $admin = new Users();

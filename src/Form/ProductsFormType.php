@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
+use Override;
 use App\Entity\Categories;
 use App\Entity\Products;
 use App\Repository\CategoriesRepository;
@@ -19,6 +20,7 @@ use Symfony\Component\Validator\Constraints\Positive;
 
 final class ProductsFormType extends AbstractType
 {
+    #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -69,6 +71,7 @@ final class ProductsFormType extends AbstractType
         ;
     }
 
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
