@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Security\Voter;
 
+use Override;
 use Exception;
 use App\Entity\Products;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -13,14 +14,15 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 final class ProductsVoter extends Voter
 {
-    public const EDIT = 'PRODUCT_EDIT';
+    public const string EDIT = 'PRODUCT_EDIT';
 
-    public const DELETE = 'PRODUCT_DELETE';
+    public const string DELETE = 'PRODUCT_DELETE';
 
     public function __construct(private readonly Security $security)
     {
     }
 
+    #[Override]
     protected function supports(string $attribute, $product): bool
     {
         if(!in_array($attribute, [self::EDIT, self::DELETE], true)){
@@ -37,15 +39,20 @@ final class ProductsVoter extends Voter
         // return in_array($attribute, [self::EDIT, self::DELETE]) && $product instanceof Products;
     }
 
+    #[Override]
     protected function voteOnAttribute($attribute, $product, TokenInterface $token): bool
     {
         // On récupère l'utilisateur à partir du token
         $user = $token->getUser();
 
-        if(!$user instanceof UserInterface) return false;
+        if (!$user instanceof UserInterface) {
+            return false;
+        }
 
         // On vérifie si l'utilisateur est admin
-        if($this->security->isGranted('ROLE_ADMIN')) return true;
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
 
         // On vérifie les permissions
         /* switch($attribute){
