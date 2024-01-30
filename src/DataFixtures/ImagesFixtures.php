@@ -31,6 +31,7 @@ final class ImagesFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
+    #[Override]
     public function getDependencies(): array
     {
         return [

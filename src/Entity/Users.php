@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Override;
 use App\Repository\UsersRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
@@ -90,6 +91,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @see UserInterface
      */
+    #[Override]
     public function getUserIdentifier(): string
     {
         return $this->email;
@@ -98,6 +100,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
+    #[Override]
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -118,6 +121,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
+    #[Override]
     public function getPassword(): string
     {
         return $this->password;
@@ -133,6 +137,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
+    #[Override]
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
