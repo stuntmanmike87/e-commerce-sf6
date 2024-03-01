@@ -37,8 +37,9 @@ final class UsersRepository extends ServiceEntityRepository implements PasswordU
         }
 
         $user->setPassword($newHashedPassword);
-        $this->_em->persist($user);
-        $this->_em->flush();
+        $em = $this->getEntityManager();
+        $em->persist($user);//$this->_em->persist($user);
+        $em->flush();//$this->_em->flush();
     }
 
     public function findOneByEmail(string $email): ?Users//mixed
