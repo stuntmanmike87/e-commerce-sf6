@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use GdImage;
-use Exception;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -18,17 +16,17 @@ final readonly class PictureService
     public function add(UploadedFile $picture, ?string $folder = '', ?int $width = 250, ?int $height = 250): string
     {
         // On donne un nouveau nom à l'image
-        $fichier = md5(uniqid((string)random_int(0, mt_getrandmax()), true)) . '.webp';//md5(uniqid((string)rand(), true)) . '.webp';
+        $fichier = md5(uniqid((string) random_int(0, mt_getrandmax()), true)).'.webp'; // md5(uniqid((string)rand(), true)) . '.webp';
 
         // On récupère les infos de l'image
         /** @var array<string> $picture_infos */
-        $picture_infos = getimagesize((string)$picture);
+        $picture_infos = getimagesize((string) $picture);
 
-        if(! is_array($picture_infos)){//if($picture_infos === false){
-            throw new Exception("Format d'image incorrect");
+        if (!is_array($picture_infos)) {// if($picture_infos === false){
+            throw new \Exception("Format d'image incorrect");
         }
 
-        /** @var GdImage $picture_source */
+        /** @var \GdImage $picture_source */
         $picture_source = $this->imagecreatefromfiletype($picture, $picture_infos);
 
         // On recadre l'image
@@ -40,21 +38,21 @@ final readonly class PictureService
         $src_x = 0;
         $src_y = 0;
 
-        if ($imageWidth < $imageHeight){//-1
+        if ($imageWidth < $imageHeight) {// -1
             // portrait
             $squareSize = $imageWidth;
             $src_x = 0;
             $src_y = ((int) $imageHeight - (int) $squareSize) / 2;
         }
 
-        if ($imageWidth === $imageHeight){//0
+        if ($imageWidth === $imageHeight) {// 0
             // carré
             $squareSize = $imageWidth;
             $src_x = 0;
             $src_y = 0;
         }
 
-        if ($imageWidth > $imageHeight){//1
+        if ($imageWidth > $imageHeight) {// 1
             // paysage
             $squareSize = $imageHeight;
             $src_x = ((int) $imageWidth - (int) $squareSize) / 2;
@@ -62,7 +60,7 @@ final readonly class PictureService
         }
 
         // On crée une nouvelle image "vierge"
-        /** @var GdImage $resized_picture */
+        /** @var \GdImage $resized_picture */
         $resized_picture = imagecreatetruecolor((int) $width, (int) $height);
 
         imagecopyresampled($resized_picture, $picture_source, 0, 0, $src_x, $src_y, (int) $width, (int) $height, (int) $squareSize, (int) $squareSize);
@@ -70,17 +68,17 @@ final readonly class PictureService
         /** @var string $dir */
         $dir = $this->params->get('images_directory');
         /** @var string $path */
-        $path = $dir. $folder;
+        $path = $dir.$folder;
 
         // On crée le dossier de destination s'il n'existe pas
-        if(!file_exists($path . '/mini/')){
-            mkdir($path . '/mini/', 0755, true);
+        if (!file_exists($path.'/mini/')) {
+            mkdir($path.'/mini/', 0755, true);
         }
 
         // On stocke l'image recadrée
-        imagewebp($resized_picture, $path . '/mini/' . $width . 'x' . $height . '-' . $fichier);
+        imagewebp($resized_picture, $path.'/mini/'.$width.'x'.$height.'-'.$fichier);
 
-        $picture->move($path . '/', $fichier);
+        $picture->move($path.'/', $fichier);
 
         return $fichier;
     }
@@ -88,14 +86,14 @@ final readonly class PictureService
     /** @param array<string> $picture_infos */
     public function imagecreatefromfiletype(UploadedFile $picture, array $picture_infos): mixed
     {
-        if ($picture_infos['mime'] == 'image/png'){
-            $picture_source = imagecreatefrompng((string)$picture);
-        } elseif ($picture_infos['mime'] == 'image/jpeg'){
-            $picture_source = imagecreatefromjpeg((string)$picture);
-        } elseif ($picture_infos['mime'] == 'image/webp'){
-            $picture_source = imagecreatefromwebp((string)$picture);
+        if ('image/png' == $picture_infos['mime']) {
+            $picture_source = imagecreatefrompng((string) $picture);
+        } elseif ('image/jpeg' == $picture_infos['mime']) {
+            $picture_source = imagecreatefromjpeg((string) $picture);
+        } elseif ('image/webp' == $picture_infos['mime']) {
+            $picture_source = imagecreatefromwebp((string) $picture);
         } else {
-            throw new Exception("Format d'image incorrect");
+            throw new \Exception("Format d'image incorrect");
         }
 
         return $picture_source;
@@ -103,24 +101,24 @@ final readonly class PictureService
 
     public function delete(string $fichier, ?string $folder = '', ?int $width = 250, ?int $height = 250): bool
     {
-        if($fichier !== 'default.webp'){
+        if ('default.webp' !== $fichier) {
             $success = false;
 
             /** @var string $dir */
             $dir = $this->params->get('images_directory');
             /** @var string $path */
-            $path = $dir. $folder;
+            $path = $dir.$folder;
 
-            $mini = $path . '/mini/' . $width . 'x' . $height . '-' . $fichier;
+            $mini = $path.'/mini/'.$width.'x'.$height.'-'.$fichier;
 
-            if(file_exists($mini)){
+            if (file_exists($mini)) {
                 unlink($mini);
                 $success = true;
             }
 
-            $original = $path . '/' . $fichier;
+            $original = $path.'/'.$fichier;
 
-            if(file_exists($original)){
+            if (file_exists($original)) {
                 unlink($original);
                 $success = true;
             }

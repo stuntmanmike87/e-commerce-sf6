@@ -16,7 +16,7 @@ final readonly class SendMailService
     /** @param  array<string> $context */
     public function send(string $from, string $to, string $subject, string $template, array $context): void
     {
-        //On crée le mail
+        // On crée le mail
         $email = (new TemplatedEmail())
             ->from($from)
             ->to($to)

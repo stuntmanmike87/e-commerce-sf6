@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Security\Voter;
 
-use Override;
-use Exception;
 use App\Entity\Products;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 final class ProductsVoter extends Voter
 {
@@ -22,10 +20,10 @@ final class ProductsVoter extends Voter
     {
     }
 
-    #[Override]
+    #[\Override]
     protected function supports(string $attribute, $product): bool
     {
-        if(!in_array($attribute, [self::EDIT, self::DELETE], true)){
+        if (!in_array($attribute, [self::EDIT, self::DELETE], true)) {
             return false;
         }
 
@@ -39,7 +37,7 @@ final class ProductsVoter extends Voter
         // return in_array($attribute, [self::EDIT, self::DELETE]) && $product instanceof Products;
     }
 
-    #[Override]
+    #[\Override]
     protected function voteOnAttribute($attribute, $product, TokenInterface $token): bool
     {
         // On récupère l'utilisateur à partir du token
@@ -76,14 +74,15 @@ final class ProductsVoter extends Voter
             return $this->canDelete();
         } */
 
-        /** @var bool $action */
-        /** @var string $attribute */
-        $action = match($attribute){
+        // ** @var bool $action */
+        // ** @var string $attribute */
+        // $action =
+        match ($attribute) {
             // On vérifie si l'utilisateur peut éditer
             self::EDIT => $this->canEdit(),
             // On vérifie si l'utilisateur peut supprimer
             self::DELETE => $this->canDelete(),
-            default => throw new Exception("Error: unknown action, the user has no such ability"),
+            default => throw new \Exception('Error: unknown action, the user has no such ability'),
         };
 
         return true;

@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use Override;
 use App\Entity\Users;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-//use Symfony\Component\String\Slugger\SluggerInterface;
+
+// use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class UsersFixtures extends Fixture
 {
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordEncoder/* ,
         private readonly SluggerInterface $slugger */
-    )
-    {
+    ) {
     }
 
-    #[Override]
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $admin = new Users();
@@ -38,7 +37,7 @@ final class UsersFixtures extends Fixture
 
         $faker = Factory::create('fr_FR');
 
-        for($usr = 1; $usr <= 5; ++$usr){//for($usr = 1; $usr <= 5; $usr++){
+        for ($usr = 1; $usr <= 5; ++$usr) {// for($usr = 1; $usr <= 5; $usr++){
             $user = new Users();
             $user->setEmail($faker->email);
             $user->setLastname($faker->lastName);

@@ -15,7 +15,7 @@ final class MainController extends AbstractController
     public function index(CategoriesRepository $categoriesRepository): Response
     {
         return $this->render('main/index.html.twig', [
-            'categories' => $categoriesRepository->findBy([], ['categoryOrder' => 'asc'])
+            'categories' => $categoriesRepository->findBy([], ['categoryOrder' => 'asc']),
         ]);
     }
 }

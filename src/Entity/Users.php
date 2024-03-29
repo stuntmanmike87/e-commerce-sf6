@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use Override;
 use App\Repository\UsersRepository;
-use DateTimeImmutable;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -28,7 +26,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     private string $email;
 
-    /** @var  array<string> $roles */
+    /** @var array<string> $roles */
     #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
 
@@ -56,17 +54,17 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::STRING, length: 100, nullable: true)]
     private ?string $resetToken = null;
 
-    /** @var  Collection<Orders> $orders */
+    /** @var Collection<Orders> $orders */
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Orders::class)]
     private Collection $orders;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTimeImmutable $created_at;
+    private \DateTimeImmutable $created_at;
 
     public function __construct()
     {
         $this->orders = new ArrayCollection();
-        $this->created_at = new DateTimeImmutable();
+        $this->created_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -91,7 +89,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @see UserInterface
      */
-    #[Override]
+    #[\Override]
     public function getUserIdentifier(): string
     {
         return $this->email;
@@ -100,7 +98,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    #[Override]
+    #[\Override]
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -121,7 +119,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    #[Override]
+    #[\Override]
     public function getPassword(): string
     {
         return $this->password;
@@ -137,7 +135,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    #[Override]
+    #[\Override]
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
@@ -263,12 +261,12 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
 

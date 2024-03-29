@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\CouponsRepository;
-use DateTimeInterface;
-use DateTimeImmutable;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CouponsRepository::class)]
@@ -34,13 +32,13 @@ class Coupons
     private int $max_usage;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private DateTimeInterface $validity;
+    private \DateTimeInterface $validity;
 
     #[ORM\Column(type: Types::BOOLEAN)]
     private bool $is_valid;
 
     #[ORM\ManyToOne(targetEntity: CouponsTypes::class, inversedBy: 'coupons')]
-    #[ORM\JoinColumn(nullable: true/*false*/)]
+    #[ORM\JoinColumn(nullable: true/* false */)]
     private ?CouponsTypes $coupons_types = null;
 
     /** @var Collection<Orders> $orders */
@@ -48,12 +46,12 @@ class Coupons
     private Collection $orders;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTimeImmutable $created_at;
+    private \DateTimeImmutable $created_at;
 
     public function __construct()
     {
         $this->orders = new ArrayCollection();
-        $this->created_at = new DateTimeImmutable();
+        $this->created_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -109,12 +107,12 @@ class Coupons
         return $this;
     }
 
-    public function getValidity(): ?DateTimeInterface
+    public function getValidity(): ?\DateTimeInterface
     {
         return $this->validity;
     }
 
-    public function setValidity(DateTimeInterface $validity): self
+    public function setValidity(\DateTimeInterface $validity): self
     {
         $this->validity = $validity;
 
@@ -167,7 +165,7 @@ class Coupons
     {
         // set the owning side to null (unless already changed)
         if ($this->orders->removeElement($order) && $order->getCoupons() === $this) {
-                $order->setCoupons(null);
+            $order->setCoupons(null);
         }
 
         /* if ($this->orders->removeElement($order)) {
@@ -180,12 +178,12 @@ class Coupons
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
 

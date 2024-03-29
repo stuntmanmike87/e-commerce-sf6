@@ -12,12 +12,12 @@ use App\Service\PictureService;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[Route('/admin/produits', name: 'admin_products_')]
 final class ProductsController extends AbstractController
@@ -26,6 +26,7 @@ final class ProductsController extends AbstractController
     public function index(ProductsRepository $productsRepository): Response
     {
         $produits = $productsRepository->findAll();
+
         return $this->render('admin/products/index.html.twig', ['produits' => $produits]);
     }
 
@@ -34,7 +35,7 @@ final class ProductsController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
-        //On crée un "nouveau produit"
+        // On crée un "nouveau produit"
         $product = new Products();
 
         // On crée le formulaire
@@ -43,14 +44,14 @@ final class ProductsController extends AbstractController
         // On traite la requête du formulaire
         $productForm->handleRequest($request);
 
-        //On vérifie si le formulaire est soumis ET valide
-        if($productForm->isSubmitted() && $productForm->isValid()){
+        // On vérifie si le formulaire est soumis ET valide
+        if ($productForm->isSubmitted() && $productForm->isValid()) {
             // On récupère les images
-            /** @var  Collection<Images> $images */
+            /** @var Collection<Images> $images */
             $images = $productForm->get('images')->getData();
-            
+
             /** @var UploadedFile $image */
-            foreach($images as $image){
+            foreach ($images as $image) {
                 // On définit le dossier de destination
                 $folder = 'products';
 
@@ -64,10 +65,10 @@ final class ProductsController extends AbstractController
 
             // On génère le slug
             $prod = $product->getName();
-            $slug = $slugger->slug((string)$prod);
-            $product->setSlug((string)$slug);
+            $slug = $slugger->slug((string) $prod);
+            $product->setSlug((string) $slug);
 
-            // On arrondit le prix 
+            // On arrondit le prix
             // $prix = $product->getPrice() * 100;
             // $product->setPrice($prix);
 
@@ -104,14 +105,14 @@ final class ProductsController extends AbstractController
         // On traite la requête du formulaire
         $productForm->handleRequest($request);
 
-        //On vérifie si le formulaire est soumis ET valide
-        if($productForm->isSubmitted() && $productForm->isValid()){
+        // On vérifie si le formulaire est soumis ET valide
+        if ($productForm->isSubmitted() && $productForm->isValid()) {
             // On récupère les images
-            /** @var  Collection<Images> $images */
+            /** @var Collection<Images> $images */
             $images = $productForm->get('images')->getData();
 
             /** @var UploadedFile $image */
-            foreach($images as $image){
+            foreach ($images as $image) {
                 // On définit le dossier de destination
                 $folder = 'products';
 
@@ -125,10 +126,10 @@ final class ProductsController extends AbstractController
 
             // On génère le slug
             $prod = $product->getName();
-            $slug = $slugger->slug((string)$prod);
-            $product->setSlug((string)$slug);
+            $slug = $slugger->slug((string) $prod);
+            $product->setSlug((string) $slug);
 
-            // On arrondit le prix 
+            // On arrondit le prix
             // $prix = $product->getPrice() * 100;
             // $product->setPrice($prix);
 
@@ -142,9 +143,9 @@ final class ProductsController extends AbstractController
             return $this->redirectToRoute('admin_products_index');
         }
 
-        return $this->render('admin/products/edit.html.twig',[
-            'productForm' => $productForm,//->createView(),
-            'product' => $product
+        return $this->render('admin/products/edit.html.twig', [
+            'productForm' => $productForm, // ->createView(),
+            'product' => $product,
         ]);
     }
 
@@ -164,24 +165,23 @@ final class ProductsController extends AbstractController
         /** @var array<string> $data */
         $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        if($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])){
+        if ($this->isCsrfTokenValid('delete'.$image->getId(), $data['_token'])) {
             // Le token csrf est valide
             // On récupère le nom de l'image
             $nom = $image->getName();
 
-            if($pictureService->delete((string)$nom, 'products', 300, 300)){
+            if ($pictureService->delete((string) $nom, 'products', 300, 300)) {
                 // On supprime l'image de la base de données
                 $em->remove($image);
                 $em->flush();
 
                 return new JsonResponse(['success' => true], Response::HTTP_OK);
             }
-    
+
             // La suppression a échoué
             return new JsonResponse(['error' => 'Erreur de suppression'], Response::HTTP_BAD_REQUEST);
         }
 
         return new JsonResponse(['error' => 'Token invalide'], Response::HTTP_BAD_REQUEST);
     }
-
 }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\CouponsTypesRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CouponsTypesRepository::class)]
@@ -70,7 +70,7 @@ class CouponsTypes
     {
         // set the owning side to null (unless already changed)
         if ($this->coupons->removeElement($coupon) && $coupon->getCouponsTypes() === $this) {
-                $coupon->setCouponsTypes(null);
+            $coupon->setCouponsTypes(null);
         }
 
         /* if ($this->coupons->removeElement($coupon)) {

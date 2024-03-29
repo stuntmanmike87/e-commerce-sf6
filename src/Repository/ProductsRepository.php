@@ -31,21 +31,21 @@ final class ProductsRepository extends ServiceEntityRepository
 
         $query = $this->getEntityManager()->createQueryBuilder()
             ->select('c', 'p')
-            ->from(Products::class, 'p')//->from('App\Entity\Products', 'p')
+            ->from(Products::class, 'p')// ->from('App\Entity\Products', 'p')
             ->join('p.categories', 'c')
-            ->where(sprintf("c.slug = \'%s\'", $slug))//->where("c.slug = '$slug'")
+            ->where(sprintf("c.slug = \'%s\'", $slug))// ->where("c.slug = '$slug'")
             ->setMaxResults($limit)
             ->setFirstResult(($page * $limit) - $limit);
 
         $paginator = new Paginator($query);
         $data = $paginator->getQuery()->getResult();
 
-        //On vérifie qu'on a des données
-        if($data === null){//if(empty($data)){
+        // On vérifie qu'on a des données
+        if (null === $data) {// if(empty($data)){
             return $result;
         }
 
-        //On calcule le nombre de pages
+        // On calcule le nombre de pages
         $pages = ceil($paginator->count() / $limit);
 
         // On remplit le tableau

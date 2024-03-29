@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ProductsRepository;
-use DateTimeImmutable;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -42,7 +41,7 @@ class Products
     private int $stock;
 
     #[ORM\ManyToOne(targetEntity: Categories::class, inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: true/*false*/)]
+    #[ORM\JoinColumn(nullable: true/* false */)]
     private ?Categories $categories = null;
 
     /** @var Collection<Images> $images */
@@ -54,7 +53,7 @@ class Products
     private Collection $ordersDetails;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTimeImmutable $created_at;
+    private \DateTimeImmutable $created_at;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
     private string $slug;
@@ -63,7 +62,7 @@ class Products
     {
         $this->images = new ArrayCollection();
         $this->ordersDetails = new ArrayCollection();
-        $this->created_at = new DateTimeImmutable();
+        $this->created_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -153,7 +152,7 @@ class Products
     {
         // set the owning side to null (unless already changed)
         if ($this->images->removeElement($image) && $image->getProducts() === $this) {
-                $image->setProducts(null);
+            $image->setProducts(null);
         }
 
         /* if ($this->images->removeElement($image)) {
@@ -188,8 +187,8 @@ class Products
     {
         // set the owning side to null (unless already changed)
         if ($this->ordersDetails->removeElement($ordersDetail) && $ordersDetail->getProducts() === $this) {
-                $ordersDetail == null;
-                //->setProducts(null);
+            null == $ordersDetail;
+            // ->setProducts(null);
         }
 
         /* if ($this->ordersDetails->removeElement($ordersDetail)) {
@@ -202,12 +201,12 @@ class Products
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
 

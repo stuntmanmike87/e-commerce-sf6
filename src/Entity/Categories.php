@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\CategoriesRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoriesRepository::class)]
@@ -27,7 +27,7 @@ class Categories
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'categories')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    private ?Categories $parent = null;//private Categories $parent;
+    private ?Categories $parent = null; // private Categories $parent;
 
     /** @var Collection<Categories> $categories */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
@@ -109,7 +109,7 @@ class Categories
     {
         // set the owning side to null (unless already changed)
         if ($this->categories->removeElement($category) && $category->getParent() === $this) {
-                $category->setParent(null);
+            $category->setParent(null);
         }
 
         /* if ($this->categories->removeElement($category)) {
@@ -144,7 +144,7 @@ class Categories
     {
         // set the owning side to null (unless already changed)
         if ($this->products->removeElement($product) && $product->getCategories() === $this) {
-                $product->setCategories(null);
+            $product->setCategories(null);
         }
 
         /* if ($this->products->removeElement($product)) {

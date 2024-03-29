@@ -10,7 +10,6 @@ use App\Form\ResetPasswordRequestFormType;
 use App\Repository\UsersRepository;
 use App\Service\SendMailService;
 use Doctrine\ORM\EntityManagerInterface;
-use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +22,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 final class SecurityController extends AbstractController
 {
-    #[Route('/connexion', name:'app_login')]
+    #[Route('/connexion', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // if ($this->getUser()) {
@@ -37,27 +36,24 @@ final class SecurityController extends AbstractController
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
-            'error' => $error
+            'error' => $error,
         ]);
     }
 
-    #[Route('/deconnexion', name:'app_logout')]
+    #[Route('/deconnexion', name: 'app_logout')]
     public function logout(): never
     {
-        throw new LogicException(
-            'This method can be blank - it will be intercepted by the logout key on your firewall.'
-        );
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    #[Route('/oubli-pass', name:'forgotten_password')]
+    #[Route('/oubli-pass', name: 'forgotten_password')]
     public function forgottenPassword(
         Request $request,
         UsersRepository $usersRepository,
         TokenGeneratorInterface $tokenGenerator,
         EntityManagerInterface $entityManager,
         SendMailService $mail
-    ): Response
-    {
+    ): Response {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
 
         $form->handleRequest($request);
@@ -65,14 +61,14 @@ final class SecurityController extends AbstractController
         /** @var string $form_data */
         $form_data = $form->get('email')->getData();
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var Users $user */
 
-            //On va chercher l'utilisateur par son email
+            // On va chercher l'utilisateur par son email
             $user = $usersRepository->findOneByEmail($form_data);
 
             // On vérifie si on a un utilisateur
-            if($user instanceof Users){
+            if ($user instanceof Users) {
                 // On génère un token de réinitialisation
                 $token = $tokenGenerator->generateToken();
                 $user->setResetToken($token);
@@ -81,7 +77,7 @@ final class SecurityController extends AbstractController
 
                 // On génère un lien de réinitialisation du mot de passe
                 $url = $this->generateUrl('reset_pass', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
-                
+
                 // On crée les données du mail
                 /** @var array<string> $context */
                 $context = ['url' => $url, 'user' => $user];
@@ -96,34 +92,35 @@ final class SecurityController extends AbstractController
                 );
 
                 $this->addFlash('success', 'Email envoyé avec succès');
+
                 return $this->redirectToRoute('app_login');
             }
 
             // $user est null
             $this->addFlash('danger', 'Un problème est survenu');
+
             return $this->redirectToRoute('app_login');
         }
 
         return $this->render('security/reset_password_request.html.twig', [
-            'requestPassForm' => $form//->createView()
+            'requestPassForm' => $form, // ->createView()
         ]);
     }
 
-    #[Route('/oubli-pass/{token}', name:'reset_pass')]
+    #[Route('/oubli-pass/{token}', name: 'reset_pass')]
     public function resetPass(
         TokenInterface $token,
         Request $request,
         UsersRepository $usersRepository,
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher
-    ): Response
-    {
+    ): Response {
         /** @var Users $user */
-        
+
         // On vérifie si on a ce token dans la base
         $user = $usersRepository->findOneByResetToken($token);
-        
-        if($user instanceof Users){
+
+        if ($user instanceof Users) {
             $form = $this->createForm(ResetPasswordFormType::class);
 
             $form->handleRequest($request);
@@ -131,7 +128,7 @@ final class SecurityController extends AbstractController
             /** @var string $form_data */
             $form_data = $form->get('password')->getData();
 
-            if($form->isSubmitted() && $form->isValid()){
+            if ($form->isSubmitted() && $form->isValid()) {
                 // On efface le token
                 $user->setResetToken('');
                 $user->setPassword(
@@ -144,15 +141,17 @@ final class SecurityController extends AbstractController
                 $entityManager->flush();
 
                 $this->addFlash('success', 'Mot de passe changé avec succès');
+
                 return $this->redirectToRoute('app_login');
             }
 
             return $this->render('security/reset_password.html.twig', [
-                'passForm' => $form//->createView()
+                'passForm' => $form, // ->createView()
             ]);
         }
 
         $this->addFlash('danger', 'Jeton invalide');
+
         return $this->redirectToRoute('app_login');
     }
 }

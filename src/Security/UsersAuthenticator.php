@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use Override;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,12 +34,12 @@ final class UsersAuthenticator extends AbstractLoginFormAuthenticator
         $this->urlGenerator = $urlGenerator;
     } */
 
-    #[Override]
+    #[\Override]
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
 
-        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);//(Security::LAST_USERNAME, $email);
+        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email); // (Security::LAST_USERNAME, $email);
 
         return new Passport(
             new UserBadge((string) $email),
@@ -51,13 +50,13 @@ final class UsersAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
-    #[Override]
+    #[\Override]
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $targetPath = $this->getTargetPath($request->getSession(), $firewallName);
 
-        if ($targetPath !== '') {
-            return new RedirectResponse((string)$targetPath);
+        if ('' !== $targetPath) {
+            return new RedirectResponse((string) $targetPath);
         }
 
         // For example:
@@ -65,7 +64,7 @@ final class UsersAuthenticator extends AbstractLoginFormAuthenticator
         // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
-    #[Override]
+    #[\Override]
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);

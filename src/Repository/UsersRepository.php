@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use Override;
 use App\Entity\Users;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -29,7 +28,7 @@ final class UsersRepository extends ServiceEntityRepository implements PasswordU
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */
-    #[Override]
+    #[\Override]
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof Users) {
@@ -38,11 +37,11 @@ final class UsersRepository extends ServiceEntityRepository implements PasswordU
 
         $user->setPassword($newHashedPassword);
         $em = $this->getEntityManager();
-        $em->persist($user);//$this->_em->persist($user);
-        $em->flush();//$this->_em->flush();
+        $em->persist($user); // $this->_em->persist($user);
+        $em->flush(); // $this->_em->flush();
     }
 
-    public function findOneByEmail(string $email): ?Users//mixed
+    public function findOneByEmail(string $email): ?Users// mixed
     {
         /* return $this->createQueryBuilder('u')
             ->andWhere('u.email = :email')
@@ -61,7 +60,7 @@ final class UsersRepository extends ServiceEntityRepository implements PasswordU
         return $userFoundByEmail;
     }
 
-    public function findOneByResetToken(TokenInterface $token): ?Users//mixed
+    public function findOneByResetToken(TokenInterface $token): ?Users// mixed
     {
         /* return $this->createQueryBuilder('u')
             ->andWhere('u.token = :token')

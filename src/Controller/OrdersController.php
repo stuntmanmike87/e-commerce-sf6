@@ -25,12 +25,13 @@ final class OrdersController extends AbstractController
 
         $panier = $session->get('panier', []);
 
-        if($panier === []){
+        if ([] === $panier) {
             $this->addFlash('message', 'Votre panier est vide');
+
             return $this->redirectToRoute('main');
         }
 
-        //Le panier n'est pas vide, on crée la commande
+        // Le panier n'est pas vide, on crée la commande
         $order = new Orders();
 
         // On remplit la commande
@@ -42,7 +43,7 @@ final class OrdersController extends AbstractController
         // On parcourt le panier pour créer les détails de commande
         /** @var string[] $panier */
         /** @var int $quantity */
-        foreach($panier as $item => $quantity){
+        foreach ($panier as $item => $quantity) {
             $orderDetails = new OrdersDetails();
 
             // On va chercher le produit
@@ -66,6 +67,7 @@ final class OrdersController extends AbstractController
         $session->remove('panier');
 
         $this->addFlash('message', 'Commande créée avec succès');
+
         return $this->redirectToRoute('main');
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use Override;
 use App\Entity\Images;
 use App\Entity\Products;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -14,16 +13,16 @@ use Faker\Factory;
 
 final class ImagesFixtures extends Fixture implements DependentFixtureInterface
 {
-    #[Override]
+    #[\Override]
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
 
-        for($img = 1; $img <= 100; ++$img){//for($img = 1; $img <= 100; $img++){
+        for ($img = 1; $img <= 100; ++$img) {// for($img = 1; $img <= 100; $img++){
             $image = new Images();
             $image->setName($faker->image(null, 640, 480));
             /** @var Products|null $product */
-            $product = $this->getReference('prod-'.random_int(1, 10));//('prod-'.rand(1, 10));
+            $product = $this->getReference('prod-'.random_int(1, 10)); // ('prod-'.rand(1, 10));
             $image->setProducts($product);
             $manager->persist($image);
         }
@@ -31,11 +30,11 @@ final class ImagesFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    #[Override]
+    #[\Override]
     public function getDependencies(): array
     {
         return [
-            ProductsFixtures::class
-        ];  
+            ProductsFixtures::class,
+        ];
     }
 }

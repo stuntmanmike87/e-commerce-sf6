@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\OrdersRepository;
-use DateTimeImmutable;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrdersRepository::class)]
@@ -24,7 +23,7 @@ class Orders
     private string $reference;
 
     #[ORM\ManyToOne(targetEntity: Coupons::class, inversedBy: 'orders')]
-    private ?Coupons $coupons = null;//private Coupons $coupons;
+    private ?Coupons $coupons = null; // private Coupons $coupons;
 
     /* #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
@@ -39,12 +38,12 @@ class Orders
     private Collection $ordersDetails;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTimeImmutable $created_at;
+    private \DateTimeImmutable $created_at;
 
     public function __construct()
     {
         $this->ordersDetails = new ArrayCollection();
-        $this->created_at = new DateTimeImmutable();
+        $this->created_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -110,8 +109,8 @@ class Orders
     {
         // set the owning side to null (unless already changed)
         if ($this->ordersDetails->removeElement($ordersDetail) && $ordersDetail->getOrders() === $this) {
-                $ordersDetail == null;
-                //->setOrders(null);
+            null == $ordersDetail;
+            // ->setOrders(null);
         }
 
         /* if ($this->ordersDetails->removeElement($ordersDetail)) {
@@ -124,12 +123,12 @@ class Orders
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
 

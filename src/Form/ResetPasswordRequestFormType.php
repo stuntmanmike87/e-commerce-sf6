@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class ResetPasswordRequestFormType extends AbstractType
 {
-    #[Override]
+    #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -20,13 +19,13 @@ final class ResetPasswordRequestFormType extends AbstractType
                 'label' => 'Entrez votre e-mail',
                 'attr' => [
                     'placeholder' => 'exemple@email.fr',
-                    'class' => 'form-control'
-                ]
+                    'class' => 'form-control',
+                ],
             ])
         ;
     }
 
-    #[Override]
+    #[\Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
