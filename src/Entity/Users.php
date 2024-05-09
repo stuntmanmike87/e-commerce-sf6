@@ -12,18 +12,24 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[ORM\Entity(repositoryClass: UsersRepository::class)]
 /** @final */
 class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    // final public const ROLE_USER = 'ROLE_USER';
+
+    // final public const ROLE_ADMIN = 'ROLE_ADMIN';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER)]
     private int $id;
 
     #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
+    #[Assert\Email]
     private string $email;
 
     /** @var array<string> $roles */
@@ -34,18 +40,23 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private string $password;
 
     #[ORM\Column(type: Types::STRING, length: 100)]
+    #[Assert\NotBlank]
     private string $lastname;
 
     #[ORM\Column(type: Types::STRING, length: 100)]
+    #[Assert\NotBlank]
     private string $firstname;
 
     #[ORM\Column(type: Types::STRING, length: 255)]
+    #[Assert\NotBlank]
     private string $address;
 
     #[ORM\Column(type: Types::STRING, length: 5)]
+    #[Assert\NotBlank]
     private string $zipcode;
 
     #[ORM\Column(type: Types::STRING, length: 150)]
+    #[Assert\NotBlank]
     private string $city;
 
     #[ORM\Column(type: Types::BOOLEAN)]
