@@ -1,0 +1,16 @@
+diff --git a/config/routes.yaml b/config/routes.yaml
+index 5b102f6..41ef814 100644
+--- a/config/routes.yaml
++++ b/config/routes.yaml
+@@ -1,7 +1,5 @@
+ controllers:
+-    resource: ../src/Controller/
+-    type: annotation
+-
+-kernel:
+-    resource: ../src/Kernel.php
+-    type: annotation
++    resource:
++        path: ../src/Controller/
++        namespace: App\Controller
++    type: attribute
