@@ -12,6 +12,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'fallbacks' => [
                 'en',
             ],
+            'providers' => [],
         ],
     ]);
 };
