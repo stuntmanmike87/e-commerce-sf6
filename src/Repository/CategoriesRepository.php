@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Categories|null findOneBy(array $criteria, array $orderBy = null)
  * @method Categories[]    findAll()
  * @method Categories[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @template-extends ServiceEntityRepository<Categories>
  */
 final class CategoriesRepository extends ServiceEntityRepository
 {

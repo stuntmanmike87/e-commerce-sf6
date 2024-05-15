@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Coupons|null findOneBy(array $criteria, array $orderBy = null)
  * @method Coupons[]    findAll()
  * @method Coupons[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @template-extends ServiceEntityRepository<Coupons>
  */
 final class CouponsRepository extends ServiceEntityRepository
 {

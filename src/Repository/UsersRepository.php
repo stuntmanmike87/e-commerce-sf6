@@ -17,6 +17,8 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  * @method Users|null findOneBy(array $criteria, array $orderBy = null)
  * @method Users[]    findAll()
  * @method Users[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @template-extends ServiceEntityRepository<Users>
  */
 final class UsersRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
@@ -60,7 +62,7 @@ final class UsersRepository extends ServiceEntityRepository implements PasswordU
         return $userFoundByEmail;
     }
 
-    public function findOneByResetToken(TokenInterface $token): ?Users// mixed
+    public function findOneByResetToken(TokenInterface $resetToken): ?Users// mixed
     {
         /* return $this->createQueryBuilder('u')
             ->andWhere('u.token = :token')
@@ -71,8 +73,8 @@ final class UsersRepository extends ServiceEntityRepository implements PasswordU
 
         /** @var Users|null $userFoundByResetToken */
         $userFoundByResetToken = $this->createQueryBuilder('u')
-            ->andWhere('u.token = :token')
-            ->setParameter('token', $token)
+            ->andWhere('u.resetToken = :resetToken')
+            ->setParameter('resetToken', $resetToken)
             ->getQuery()
             ->getOneOrNullResult()
         ;
