@@ -22,7 +22,7 @@ class CouponsTypes
     #[ORM\Column(type: Types::STRING, length: 50)]
     private string $name;
 
-    /** @var Collection<Coupons> $coupons */
+    /** @var Collection<int, Coupons> $coupons */
     #[ORM\OneToMany(mappedBy: 'coupons_types', targetEntity: Coupons::class, orphanRemoval: true)]
     private Collection $coupons;
 
@@ -49,7 +49,7 @@ class CouponsTypes
     }
 
     /**
-     * @return Collection|Coupons[]
+     * @return Collection<int, Coupons>|Coupons[]
      */
     public function getCoupons(): Collection
     {

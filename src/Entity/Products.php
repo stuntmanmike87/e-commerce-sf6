@@ -44,11 +44,11 @@ class Products
     #[ORM\JoinColumn(nullable: true/* false */)]
     private ?Categories $categories = null;
 
-    /** @var Collection<Images> $images */
+    /** @var Collection<int, Images> $images */
     #[ORM\OneToMany(mappedBy: 'products', targetEntity: Images::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $images;
 
-    /** @var Collection<OrdersDetails> $ordersDetails */
+    /** @var Collection<int, OrdersDetails> $ordersDetails */
     #[ORM\OneToMany(mappedBy: 'products', targetEntity: OrdersDetails::class)]
     private Collection $ordersDetails;
 
@@ -131,7 +131,7 @@ class Products
     }
 
     /**
-     * @return Collection|Images[]
+     * @return Collection<int, Images>|Images[]
      */
     public function getImages(): Collection
     {
@@ -166,7 +166,7 @@ class Products
     }
 
     /**
-     * @return Collection|OrdersDetails[]
+     * @return Collection<int, OrdersDetails>|OrdersDetails[]
      */
     public function getOrdersDetails(): Collection
     {

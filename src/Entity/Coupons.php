@@ -41,7 +41,7 @@ class Coupons
     #[ORM\JoinColumn(nullable: true/* false */)]
     private ?CouponsTypes $coupons_types = null;
 
-    /** @var Collection<Orders> $orders */
+    /** @var Collection<int, Orders> $orders */
     #[ORM\OneToMany(mappedBy: 'coupons', targetEntity: Orders::class)]
     private Collection $orders;
 
@@ -144,7 +144,7 @@ class Coupons
     }
 
     /**
-     * @return Collection|Orders[]
+     * @return Collection<int, Orders>|Orders[]
      */
     public function getOrders(): Collection
     {

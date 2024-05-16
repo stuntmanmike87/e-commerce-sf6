@@ -33,7 +33,7 @@ class Orders
     #[ORM\JoinColumn(nullable: true)]
     private ?Users $users = null;
 
-    /** @var Collection<OrdersDetails> $ordersDetails */
+    /** @var Collection<int, OrdersDetails> $ordersDetails */
     #[ORM\OneToMany(mappedBy: 'orders', targetEntity: OrdersDetails::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $ordersDetails;
 
@@ -88,7 +88,7 @@ class Orders
     }
 
     /**
-     * @return Collection|OrdersDetails[]
+     * @return Collection<int, OrdersDetails>|OrdersDetails[]
      */
     public function getOrdersDetails(): Collection
     {

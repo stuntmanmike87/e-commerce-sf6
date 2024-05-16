@@ -29,11 +29,11 @@ class Categories
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Categories $parent = null; // private Categories $parent;
 
-    /** @var Collection<Categories> $categories */
+    /** @var Collection<int, Categories> $categories */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $categories;
 
-    /** @var Collection<Products> $products */
+    /** @var Collection<int, Products> $products */
     #[ORM\OneToMany(mappedBy: 'categories', targetEntity: Products::class)]
     private Collection $products;
 
@@ -88,7 +88,7 @@ class Categories
     }
 
     /**
-     * @return Collection|self[]
+     * @return Collection<int, Categories>|self[]
      */
     public function getCategories(): Collection
     {
@@ -123,7 +123,7 @@ class Categories
     }
 
     /**
-     * @return Collection|Products[]
+     * @return Collection<int, Products>|Products[]
      */
     public function getProducts(): Collection
     {

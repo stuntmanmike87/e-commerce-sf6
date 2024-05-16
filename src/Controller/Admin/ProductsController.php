@@ -47,7 +47,7 @@ final class ProductsController extends AbstractController
         // On vérifie si le formulaire est soumis ET valide
         if ($productForm->isSubmitted() && $productForm->isValid()) {
             // On récupère les images
-            /** @var Collection<Images> $images */
+            /** @var Collection<int, Images> $images */
             $images = $productForm->get('images')->getData();
 
             /** @var UploadedFile $image */
@@ -108,7 +108,7 @@ final class ProductsController extends AbstractController
         // On vérifie si le formulaire est soumis ET valide
         if ($productForm->isSubmitted() && $productForm->isValid()) {
             // On récupère les images
-            /** @var Collection<Images> $images */
+            /** @var Collection<int, Images> $images */
             $images = $productForm->get('images')->getData();
 
             /** @var UploadedFile $image */

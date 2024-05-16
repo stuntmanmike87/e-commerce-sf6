@@ -65,7 +65,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::STRING, length: 100, nullable: true)]
     private ?string $resetToken = null;
 
-    /** @var Collection<Orders> $orders */
+    /** @var Collection<int, Orders> $orders */
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Orders::class)]
     private Collection $orders;
 
@@ -238,7 +238,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Orders[]
+     * @return Collection<int, Orders>|Orders[]
      */
     public function getOrders(): Collection
     {
