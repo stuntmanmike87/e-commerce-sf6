@@ -1,7 +1,5 @@
 parameters:
-    ignoreErrors:
-        # -
-        #     identifier: missingType.generics
+    # ignoreErrors:
 
     treatPhpDocTypesAsCertain: false
 
