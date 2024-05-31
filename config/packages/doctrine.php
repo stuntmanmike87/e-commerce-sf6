@@ -21,6 +21,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                     'alias' => 'App',
                 ],
             ],
+            'controller_resolver' => [
+                'auto_mapping' => false,
+            ],
         ],
     ]);
 };
