@@ -22,6 +22,11 @@ final class ProductsFormType extends AbstractType
     #[\Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var array<Constraint>|array<string, mixed>|null $constraints */
+        $constraints = new Image([
+            'maxWidth' => 1280,
+            'maxWidthMessage' => "L'image doit faire {{ max_width }} pixels de large au maximum",
+        ]);
         $builder
             ->add('name', options: [
                 'label' => 'Nom',
@@ -58,14 +63,7 @@ final class ProductsFormType extends AbstractType
                 'multiple' => true,
                 'mapped' => false,
                 'required' => false,
-                'constraints' => [
-                    new All(
-                        new Image([
-                            'maxWidth' => 1280,
-                            'maxWidthMessage' => "L'image doit faire {{ max_width }} pixels de large au maximum",
-                        ])
-                    ),
-                ],
+                'constraints' => [new All($constraints),],
             ])
         ;
     }
