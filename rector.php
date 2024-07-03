@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-//use Rector\Core\Configuration\Option;
 use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Set\ValueObject\LevelSetList;
@@ -19,8 +18,6 @@ return static function (RectorConfig $rectorConfig): void {
     // ]);
 
     $rectorConfig->paths([__DIR__ . '/src', __DIR__ . '/tests']);
-
-    //$rectorConfig->phpstanConfig(__DIR__ . '/phpstan.neon');
 
     // basic rules
     $rectorConfig->importNames();
@@ -40,29 +37,9 @@ return static function (RectorConfig $rectorConfig): void {
         LevelSetList::UP_TO_PHP_83,
     ]);
 
-    // symfony rules
-    /* $rectorConfig->symfonyContainerPhp(
-        __DIR__ . '/var/cache/website/dev/App_KernelDevDebugContainer.xml'
-    );
-
-    $rectorConfig->symfonyContainerXml(
-        __DIR__ . '/var/cache/dev/App_KernelDevDebugContainer.xml'
-    ); */
-
-    /* $rectorConfig->import(SymfonySetList::SYMFONY_63);
-
-    $parameters = $rectorConfig->parameters();
-    
-    $parameters->set(Option::SOURCE, [__DIR__ . '/src']);
-
-    $parameters->set(
-        Option::class,
-        __DIR__ . '/var/cache/dev/AppKernelDevDebugContainer.xml'
-    ); */
-
     $rectorConfig->sets([
         //SymfonySetList::ANNOTATIONS_TO_ATTRIBUTES,
-        SymfonySetList::SYMFONY_64,//SYMFONY_70,
+        SymfonySetList::SYMFONY_71,
         SymfonySetList::SYMFONY_CODE_QUALITY,
         SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
     ]);
@@ -78,19 +55,7 @@ return static function (RectorConfig $rectorConfig): void {
         //PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
         PHPUnitSetList::PHPUNIT_100,
         PHPUnitSetList::PHPUNIT_CODE_QUALITY,
-        //PHPUnitLevelSetList::UP_TO_PHPUNIT_100,
-        //'Rector\PHPUnit\Set\PHPUnitLevelSetList' is deprecated.
-        //'UP_TO_PHPUNIT_100' is deprecated.
     ]);
 
-    /* $rectorConfig->skip([
-        VarConstantCommentRector::class,
-    ]); */
-
     $rectorConfig->importShortClasses(false);
-
-    /* $rectorConfig->ruleWithConfiguration(ChangeFileLoaderInExtensionAndKernelRector::class, [
-        ChangeFileLoaderInExtensionAndKernelRector::FROM => 'yaml',
-        ChangeFileLoaderInExtensionAndKernelRector::TO => 'php',
-    ]); */
 };
