@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('framework', [
-        'router' => [],
+        'router' => null,
     ]);
     if ($containerConfigurator->env() === 'prod') {
         $containerConfigurator->extension('framework', [

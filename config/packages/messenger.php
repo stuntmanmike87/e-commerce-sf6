@@ -24,6 +24,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 ],
                 'failed' => 'doctrine://default?queue_name=failed',
             ],
+            'default_bus' => 'messenger.bus.default',
+            'buses' => [
+                'messenger.bus.default' => [
+                ],
+            ],
             'routing' => [
                 ChatMessage::class => 'async',
                 SmsMessage::class => 'async',
