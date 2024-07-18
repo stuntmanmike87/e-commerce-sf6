@@ -63,7 +63,7 @@ final class ProductsFormType extends AbstractType
                 'multiple' => true,
                 'mapped' => false,
                 'required' => false,
-                'constraints' => [new All($constraints),],
+                'constraints' => [new All($constraints)],
             ])
         ;
     }
