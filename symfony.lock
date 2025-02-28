@@ -155,6 +155,21 @@
     "symfony/asset": {
         "version": "v6.0.1"
     },
+    "symfony/asset-mapper": {
+        "version": "7.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.4",
+            "ref": "6c28c471640cc2c6e60812ebcb961c526ef8997f"
+        },
+        "files": [
+            "./assets/app.js",
+            "./assets/styles/app.css",
+            "./config/packages/asset_mapper.yaml",
+            "./importmap.php"
+        ]
+    },
     "symfony/cache": {
         "version": "v6.0.2"
     },
@@ -484,6 +499,9 @@
     },
     "symfony/yaml": {
         "version": "v6.0.2"
+    },
+    "symfonycasts/sass-bundle": {
+        "version": "v0.8.0"
     },
     "twig/extra-bundle": {
         "version": "v3.3.7"
