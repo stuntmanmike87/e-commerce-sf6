@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Users;
+use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Repository\UsersRepository;
-use App\Security\UsersAuthenticator;
+use App\Repository\UserRepository;
+use App\Security\UserAuthenticator;
 use App\Service\JWTService;
 use App\Service\SendMailService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,12 +27,12 @@ final class RegistrationController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         UserAuthenticatorInterface $userAuthenticator,
-        UsersAuthenticator $authenticator,
+        UserAuthenticator $authenticator,
         EntityManagerInterface $entityManager,
         SendMailService $mail,
-        JWTService $jwt
+        JWTService $jwt,
     ): ?Response {
-        $user = new Users();
+        $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -61,9 +61,7 @@ final class RegistrationController extends AbstractController
 
             // On crée le Payload
             /** @var array<string> $payload */
-            $payload = [
-                'user_id' => $user->getId(),
-            ];
+            $payload = ['user_id' => strval($user->getId())];
 
             // On génère le token
             /** @var string $secret */
@@ -95,7 +93,7 @@ final class RegistrationController extends AbstractController
     }
 
     #[Route('/verif/{token}', name: 'verify_user')]
-    public function verifyUser(/* TokenInterface */ string $token, JWTService $jwt, UsersRepository $usersRepository, EntityManagerInterface $em): Response
+    public function verifyUser(/* TokenInterface */ string $token, JWTService $jwt, UserRepository $userRepository, EntityManagerInterface $em): Response
     {
         // On vérifie si le token est valide, n'a pas expiré et n'a pas été modifié
         /** @var string $secret */
@@ -106,10 +104,10 @@ final class RegistrationController extends AbstractController
             $payload = $jwt->getPayload($token);
 
             // On récupère le user du token
-            $user = $usersRepository->find($payload['user_id']);
+            $user = $userRepository->find($payload['user_id']);
 
             // On vérifie que l'utilisateur existe et n'a pas encore activé son compte
-            if (($user instanceof Users) && !(bool) $user->getIsVerified()) {
+            if (($user instanceof User) && !(bool) $user->getIsVerified()) {
                 $user->setIsVerified(true);
                 $em->flush();
                 $this->addFlash('success', 'Utilisateur activé');
@@ -125,7 +123,7 @@ final class RegistrationController extends AbstractController
     }
 
     #[Route('/renvoiverif', name: 'resend_verif')]
-    public function resendVerif(JWTService $jwt, SendMailService $mail, UsersRepository $usersRepository): Response
+    public function resendVerif(JWTService $jwt, SendMailService $mail, UserRepository $userRepository): Response
     {
         $user = $this->getUser();
 
@@ -135,7 +133,7 @@ final class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        /** @var Users $user */
+        /** @var User $user */
         if ((bool) $user->getIsVerified()) {
             $this->addFlash('warning', 'Cet utilisateur est déjà activé');
 
@@ -151,9 +149,7 @@ final class RegistrationController extends AbstractController
 
         // On crée le Payload
         /** @var array<string> $payload */
-        $payload = [
-            'user_id' => $user->getId(),
-        ];
+        $payload = ['user_id' => strval($user->getId())];
 
         // On génère le token
         /** @var string $secret */

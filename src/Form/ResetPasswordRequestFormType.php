@@ -9,6 +9,11 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @template ResetPasswordRequestForm
+ *
+ * @extends AbstractType<ResetPasswordRequestForm>
+ */
 final class ResetPasswordRequestFormType extends AbstractType
 {
     #[\Override]

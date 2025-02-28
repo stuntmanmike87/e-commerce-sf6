@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Products;
-use App\Repository\ProductsRepository;
+use App\Entity\Product;
+use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CartController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function index(SessionInterface $session, ProductsRepository $productsRepository): Response
+    public function index(SessionInterface $session, ProductRepository $productRepository): Response
     {
         $panier = $session->get('panier', []);
 
@@ -28,8 +28,8 @@ final class CartController extends AbstractController
         /** @var int $id */
         /** @var int $quantity */
         foreach ($panier as $id => $quantity) {
-            /** @var Products $product */
-            $product = $productsRepository->find($id);
+            /** @var Product $product */
+            $product = $productRepository->find($id);
 
             $data[] = [
                 'product' => $product,
@@ -43,7 +43,7 @@ final class CartController extends AbstractController
     }
 
     #[Route('/add/{id}', name: 'add')]
-    public function add(Products $product, SessionInterface $session): RedirectResponse
+    public function add(Product $product, SessionInterface $session): RedirectResponse
     {
         // On récupère l'id du produit
         $id = $product->getId();
@@ -54,7 +54,7 @@ final class CartController extends AbstractController
 
         // On ajoute le produit dans le panier s'il n'y est pas encore
         // Sinon on incrémente sa quantité
-        if (null == $panier[$id]) {// if(empty($panier[$id])){
+        if (null === $panier[$id]) {// if(empty($panier[$id])){
             $panier[$id] = 1;
         } else {
             ++$panier[$id]; // $panier[$id]++;
@@ -67,7 +67,7 @@ final class CartController extends AbstractController
     }
 
     #[Route('/remove/{id}', name: 'remove')]
-    public function remove(Products $product, SessionInterface $session): RedirectResponse
+    public function remove(Product $product, SessionInterface $session): RedirectResponse
     {
         // On récupère l'id du produit
         $id = $product->getId();
@@ -93,7 +93,7 @@ final class CartController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete')]
-    public function delete(Products $product, SessionInterface $session): RedirectResponse
+    public function delete(Product $product, SessionInterface $session): RedirectResponse
     {
         // On récupère l'id du produit
         $id = $product->getId();

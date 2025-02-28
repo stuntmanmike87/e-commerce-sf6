@@ -1,5 +1,16 @@
 parameters:
-    # ignoreErrors:
+
+    ignoreErrors:
+        -
+            message: '#PHPDoc tag @var with type array<mixed>\|null is not subtype of native type Symfony\\Component\\Validator\\Constraints\\Image.#'
+            path: src/Form/ProductFormType.php
+        -
+            message: '#Method App\\Entity\\User::getUserIdentifier\(\) should return non-empty-string but returns string.#'
+            path: src/Entity/User.php
+        -
+            message: '#PHPDoc tag @var with type Symfony\\Component\\HttpFoundation\\File\\UploadedFile is not subtype of type App\\Entity\\Image.#'
+            path: src/Controller/Admin/ProductController.php
+            count: 2
 
     treatPhpDocTypesAsCertain: false
 
@@ -7,3 +18,4 @@ parameters:
         class: 50
         # function: 8
         function: 15
+ 

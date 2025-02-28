@@ -61,7 +61,9 @@ final readonly class PictureService
 
         // On crée une nouvelle image "vierge"
         /** @var \GdImage $resized_picture */
-        $resized_picture = imagecreatetruecolor((int) $width, (int) $height);
+        /** @var int<1, max> $width */
+        /** @var int<1, max> $height */
+        $resized_picture = imagecreatetruecolor($width, $height);
 
         imagecopyresampled($resized_picture, $picture_source, 0, 0, $src_x, $src_y, (int) $width, (int) $height, (int) $squareSize, (int) $squareSize);
 
@@ -86,11 +88,11 @@ final readonly class PictureService
     /** @param array<string> $picture_infos */
     public function imagecreatefromfiletype(UploadedFile $picture, array $picture_infos): mixed
     {
-        if ('image/png' == $picture_infos['mime']) {
+        if ('image/png' === $picture_infos['mime']) {
             $picture_source = imagecreatefrompng((string) $picture);
-        } elseif ('image/jpeg' == $picture_infos['mime']) {
+        } elseif ('image/jpeg' === $picture_infos['mime']) {
             $picture_source = imagecreatefromjpeg((string) $picture);
-        } elseif ('image/webp' == $picture_infos['mime']) {
+        } elseif ('image/webp' === $picture_infos['mime']) {
             $picture_source = imagecreatefromwebp((string) $picture);
         } else {
             throw new \Exception("Format d'image incorrect");

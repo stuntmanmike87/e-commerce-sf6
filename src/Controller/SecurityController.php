@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Users;
+use App\Entity\User;
 use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
-use App\Repository\UsersRepository;
+use App\Repository\UserRepository;
 use App\Service\SendMailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -49,10 +49,10 @@ final class SecurityController extends AbstractController
     #[Route('/oubli-pass', name: 'forgotten_password')]
     public function forgottenPassword(
         Request $request,
-        UsersRepository $usersRepository,
+        UserRepository $userRepository,
         TokenGeneratorInterface $tokenGenerator,
         EntityManagerInterface $entityManager,
-        SendMailService $mail
+        SendMailService $mail,
     ): Response {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
 
@@ -62,13 +62,13 @@ final class SecurityController extends AbstractController
         $form_data = $form->get('email')->getData();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Users $user */
+            /** @var User $user */
 
             // On va chercher l'utilisateur par son email
-            $user = $usersRepository->findOneByEmail($form_data);
+            $user = $userRepository->findOneByEmail($form_data);
 
             // On vérifie si on a un utilisateur
-            if ($user instanceof Users) {
+            if ($user instanceof User) {
                 // On génère un token de réinitialisation
                 $token = $tokenGenerator->generateToken();
                 $user->setResetToken($token);
@@ -111,16 +111,16 @@ final class SecurityController extends AbstractController
     public function resetPass(
         TokenInterface $token,
         Request $request,
-        UsersRepository $usersRepository,
+        UserRepository $userRepository,
         EntityManagerInterface $entityManager,
-        UserPasswordHasherInterface $passwordHasher
+        UserPasswordHasherInterface $passwordHasher,
     ): Response {
-        /** @var Users $user */
+        /** @var User $user */
 
         // On vérifie si on a ce token dans la base
-        $user = $usersRepository->findOneByResetToken($token);
+        $user = $userRepository->findOneByResetToken($token);
 
-        if ($user instanceof Users) {
+        if ($user instanceof User) {
             $form = $this->createForm(ResetPasswordFormType::class);
 
             $form->handleRequest($request);
