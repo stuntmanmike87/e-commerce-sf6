@@ -17,6 +17,7 @@ final class ProfileController extends AbstractController
             'controller_name' => "Profil de l'utilisateur",
         ]);
     }
+
     #[Route('/profil/commandes', name: 'orders')]
     public function orders(): Response
     {

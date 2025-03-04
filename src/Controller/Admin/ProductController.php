@@ -28,6 +28,7 @@ final class ProductController extends AbstractController
 
         return $this->render('admin/product/index.html.twig', ['produits' => $produits]);
     }
+
     #[Route('/admin/produits/ajout', name: 'add')]
     public function add(
         Request $request,
@@ -90,6 +91,7 @@ final class ProductController extends AbstractController
 
         return $this->render('admin/product/add.html.twig', ['productForm' => $productForm]);
     }
+
     #[Route('/admin/produits/edition/{id}', name: 'edit')]
     public function edit(
         Product $product,
@@ -155,6 +157,7 @@ final class ProductController extends AbstractController
             'product' => $product,
         ]);
     }
+
     #[Route('/admin/produits/suppression/{id}', name: 'delete')]
     public function delete(Product $product): Response
     {
@@ -163,6 +166,7 @@ final class ProductController extends AbstractController
 
         return $this->render('admin/product/index.html.twig');
     }
+
     #[Route('/admin/produits/suppression/image/{id}', name: 'delete_image', methods: ['DELETE'])]
     public function deleteImage(
         Image $image,

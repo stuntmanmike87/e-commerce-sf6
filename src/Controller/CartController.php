@@ -40,6 +40,7 @@ final class CartController extends AbstractController
 
         return $this->render('cart/index.html.twig', ['data' => $data, 'total' => $total]);
     }
+
     #[Route('/cart/add/{id}', name: 'add')]
     public function add(Product $product, SessionInterface $session): RedirectResponse
     {
@@ -63,6 +64,7 @@ final class CartController extends AbstractController
         // On redirige vers la page du panier
         return $this->redirectToRoute('cart_index');
     }
+
     #[Route('/cart/remove/{id}', name: 'remove')]
     public function remove(Product $product, SessionInterface $session): RedirectResponse
     {
@@ -88,6 +90,7 @@ final class CartController extends AbstractController
         // On redirige vers la page du panier
         return $this->redirectToRoute('cart_index');
     }
+
     #[Route('/cart/delete/{id}', name: 'delete')]
     public function delete(Product $product, SessionInterface $session): RedirectResponse
     {
@@ -107,6 +110,7 @@ final class CartController extends AbstractController
         // On redirige vers la page du panier
         return $this->redirectToRoute('cart_index');
     }
+
     #[Route('/cart/empty', name: 'empty')]
     public function empty(SessionInterface $session): RedirectResponse
     {
