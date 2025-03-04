@@ -15,10 +15,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/commandes', name: 'app_order_')]
 final class OrderController extends AbstractController
 {
-    #[Route('/ajout', name: 'add')]
+    #[Route('/commandes/ajout', name: 'add')]
     public function add(SessionInterface $session, ProductRepository $productRepository, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

@@ -12,10 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/cart', name: 'cart_')]
 final class CartController extends AbstractController
 {
-    #[Route('/', name: 'index')]
+    #[Route('/cart/', name: 'index')]
     public function index(SessionInterface $session, ProductRepository $productRepository): Response
     {
         $panier = $session->get('panier', []);
@@ -41,8 +40,7 @@ final class CartController extends AbstractController
 
         return $this->render('cart/index.html.twig', ['data' => $data, 'total' => $total]);
     }
-
-    #[Route('/add/{id}', name: 'add')]
+    #[Route('/cart/add/{id}', name: 'add')]
     public function add(Product $product, SessionInterface $session): RedirectResponse
     {
         // On récupère l'id du produit
@@ -65,8 +63,7 @@ final class CartController extends AbstractController
         // On redirige vers la page du panier
         return $this->redirectToRoute('cart_index');
     }
-
-    #[Route('/remove/{id}', name: 'remove')]
+    #[Route('/cart/remove/{id}', name: 'remove')]
     public function remove(Product $product, SessionInterface $session): RedirectResponse
     {
         // On récupère l'id du produit
@@ -91,8 +88,7 @@ final class CartController extends AbstractController
         // On redirige vers la page du panier
         return $this->redirectToRoute('cart_index');
     }
-
-    #[Route('/delete/{id}', name: 'delete')]
+    #[Route('/cart/delete/{id}', name: 'delete')]
     public function delete(Product $product, SessionInterface $session): RedirectResponse
     {
         // On récupère l'id du produit
@@ -111,8 +107,7 @@ final class CartController extends AbstractController
         // On redirige vers la page du panier
         return $this->redirectToRoute('cart_index');
     }
-
-    #[Route('/empty', name: 'empty')]
+    #[Route('/cart/empty', name: 'empty')]
     public function empty(SessionInterface $session): RedirectResponse
     {
         $session->remove('panier');

@@ -11,10 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/category', name: 'category_')]
 final class CategoryController extends AbstractController
 {
-    #[Route('/{slug}', name: 'list')]
+    #[Route('/category/{slug}', name: 'list')]
     public function list(Category $category, ProductRepository $productRepository, Request $request): Response
     {
         // On va chercher le numéro de page dans l'url

@@ -19,18 +19,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-#[Route('/admin/produits', name: 'admin_product_')]
 final class ProductController extends AbstractController
 {
-    #[Route('/', name: 'index')]
+    #[Route('/admin/produits/', name: 'index')]
     public function index(ProductRepository $productRepository): Response
     {
         $produits = $productRepository->findAll();
 
         return $this->render('admin/product/index.html.twig', ['produits' => $produits]);
     }
-
-    #[Route('/ajout', name: 'add')]
+    #[Route('/admin/produits/ajout', name: 'add')]
     public function add(
         Request $request,
         EntityManagerInterface $em,
@@ -92,8 +90,7 @@ final class ProductController extends AbstractController
 
         return $this->render('admin/product/add.html.twig', ['productForm' => $productForm]);
     }
-
-    #[Route('/edition/{id}', name: 'edit')]
+    #[Route('/admin/produits/edition/{id}', name: 'edit')]
     public function edit(
         Product $product,
         Request $request,
@@ -158,8 +155,7 @@ final class ProductController extends AbstractController
             'product' => $product,
         ]);
     }
-
-    #[Route('/suppression/{id}', name: 'delete')]
+    #[Route('/admin/produits/suppression/{id}', name: 'delete')]
     public function delete(Product $product): Response
     {
         // On vérifie si l'utilisateur peut supprimer avec le Voter
@@ -167,8 +163,7 @@ final class ProductController extends AbstractController
 
         return $this->render('admin/product/index.html.twig');
     }
-
-    #[Route('/suppression/image/{id}', name: 'delete_image', methods: ['DELETE'])]
+    #[Route('/admin/produits/suppression/image/{id}', name: 'delete_image', methods: ['DELETE'])]
     public function deleteImage(
         Image $image,
         Request $request,

@@ -9,10 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/admin/categories', name: 'admin_categories_')]
 final class CategoryController extends AbstractController
 {
-    #[Route('/', name: 'index')]
+    #[Route('/admin/categories/', name: 'index')]
     public function index(CategoryRepository $categoryRepository): Response
     {
         $category = $categoryRepository->findBy([], ['categoryOrder' => 'asc']);
